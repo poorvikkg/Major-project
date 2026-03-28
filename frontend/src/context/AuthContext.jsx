@@ -14,15 +14,26 @@ export function AuthProvider({ children }) {
     setLoading(false);
   }, []);
 
-  const login = (email, password) => {
-    // Demo credentials — replace with real API call
-    if (email === 'admin@mpds.com' && password === 'admin123') {
-      const userData = { email, role: 'admin', name: 'Admin User' };
-      setUser(userData);
-      localStorage.setItem('mpds_user', JSON.stringify(userData));
-      return { success: true };
+  const login = async (email, password) => {
+    try {
+      const response = await fetch('http://localhost:8000/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await response.json();
+      
+      if (response.ok && data.status === 'success') {
+        const userData = { ...data.data.user, token: data.data.access_token };
+        setUser(userData);
+        localStorage.setItem('mpds_user', JSON.stringify(userData));
+        return { success: true };
+      } else {
+        return { success: false, message: data.message || 'Login failed' };
+      }
+    } catch (err) {
+      return { success: false, message: 'Network error. Please try again later.' };
     }
-    return { success: false, message: 'Invalid email or password' };
   };
 
   const logout = () => {

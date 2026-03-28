@@ -1,11 +1,15 @@
-from _future_ import annotations
+"""
+core/face_detector.py
+Detects faces in images using OpenCV Haar cascades or DeepFace.
+"""
+from __future__ import annotations
 import numpy as np
 import cv2
 from pathlib import Path
 
 
 class FaceDetector:
-    def _init_(self):
+    def __init__(self):
         self._cascade = None
         self._deepface = None
         self._mode = "stub"
@@ -31,13 +35,13 @@ class FaceDetector:
     def mode(self) -> str:
         return self._mode
 
-    def detect_from_path(self, image_path: str | Path) -> list[tuple[int,int,int,int]]:
+    def detect_from_path(self, image_path: str | Path) -> list[tuple[int, int, int, int]]:
         img = cv2.imread(str(image_path))
         if img is None:
             return []
         return self.detect_from_frame(img)
 
-    def detect_from_frame(self, frame: np.ndarray) -> list[tuple[int,int,int,int]]:
+    def detect_from_frame(self, frame: np.ndarray) -> list[tuple[int, int, int, int]]:
         if self._mode == "opencv" or self._cascade is not None:
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             faces = self._cascade.detectMultiScale(
@@ -49,12 +53,12 @@ class FaceDetector:
         return []
 
     def draw_boxes(self, frame: np.ndarray,
-                   boxes: list[tuple[int,int,int,int]],
+                   boxes: list[tuple[int, int, int, int]],
                    color: tuple = (0, 255, 100),
                    label: str = "") -> np.ndarray:
         out = frame.copy()
         for (x, y, w, h) in boxes:
-            cv2.rectangle(out, (x, y), (x+w, y+h), color, 2)
+            cv2.rectangle(out, (x, y), (x + w, y + h), color, 2)
             if label:
                 cv2.putText(out, label, (x, y - 8),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.55, color, 2)

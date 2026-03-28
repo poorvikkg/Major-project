@@ -45,21 +45,36 @@ export default function LiveMonitoringPage() {
           {/* Main Feed */}
           <div className="main-feed" id="main-feed">
             <div className="feed-display">
-              <div className="feed-placeholder">
-                <div className="scan-line"></div>
-                <div className="feed-overlay">
-                  <div className="overlay-corner tl"></div>
-                  <div className="overlay-corner tr"></div>
-                  <div className="overlay-corner bl"></div>
-                  <div className="overlay-corner br"></div>
-                </div>
-                <div className="feed-center-icon">
-                  <svg viewBox="0 0 64 64" fill="none" width="48" height="48">
-                    <rect x="8" y="12" width="48" height="32" rx="4" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.3"/>
-                    <circle cx="32" cy="28" r="8" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.5"/>
-                    <circle cx="32" cy="28" r="3" fill="currentColor" opacity="0.3"/>
-                  </svg>
-                  <p>Feed: {selectedCamera.name}</p>
+              <div className="feed-placeholder" style={{position: 'relative', overflow: 'hidden'}}>
+                {selectedCamera.id === 1 ? (
+                  <img 
+                    src="http://localhost:8000/api/live-stream?source=0" 
+                    alt="Live Stream" 
+                    style={{width: '100%', height: '100%', objectFit: 'cover'}}
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.nextSibling.style.display = 'flex';
+                    }}
+                  />
+                ) : null}
+                
+                <div style={{display: selectedCamera.id === 1 ? 'none' : 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%'}}>
+                  <div className="scan-line"></div>
+                  <div className="feed-overlay">
+                    <div className="overlay-corner tl"></div>
+                    <div className="overlay-corner tr"></div>
+                    <div className="overlay-corner bl"></div>
+                    <div className="overlay-corner br"></div>
+                  </div>
+                  <div className="feed-center-icon">
+                    <svg viewBox="0 0 64 64" fill="none" width="48" height="48">
+                      <rect x="8" y="12" width="48" height="32" rx="4" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.3"/>
+                      <circle cx="32" cy="28" r="8" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.5"/>
+                      <circle cx="32" cy="28" r="3" fill="currentColor" opacity="0.3"/>
+                    </svg>
+                    <p>Feed: {selectedCamera.name}</p>
+                    <p style={{fontSize: '0.8rem', opacity: 0.7}}>Camera source not connected</p>
+                  </div>
                 </div>
               </div>
               <div className="feed-info-bar">

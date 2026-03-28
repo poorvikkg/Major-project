@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
 import Navbar from '../components/Navbar';
+import { useAuth } from '../context/AuthContext';
 
 export default function UploadVideoPage() {
   const [file, setFile] = useState(null);
@@ -7,7 +8,10 @@ export default function UploadVideoPage() {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadComplete, setUploadComplete] = useState(false);
+  const [statusMessage, setStatusMessage] = useState('');
+  const [error, setError] = useState(null);
   const fileInputRef = useRef(null);
+  const { user } = useAuth();
 
   const handleDrag = (e) => {
     e.preventDefault();
@@ -43,16 +47,58 @@ export default function UploadVideoPage() {
   const handleUpload = async () => {
     if (!file) return;
     setIsUploading(true);
-    setUploadProgress(0);
+    setUploadProgress(10);
+    setStatusMessage('Uploading video...');
+    setError(null);
 
-    // Simulate upload progress
-    for (let i = 0; i <= 100; i += 2) {
-      await new Promise(resolve => setTimeout(resolve, 50));
-      setUploadProgress(i);
+    const formData = new FormData();
+    formData.append('video', file);
+
+    try {
+      // 1. Upload Video
+      const uploadRes = await fetch('http://localhost:8000/api/upload-video', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${user?.token}`,
+        },
+        body: formData,
+      });
+
+      const uploadData = await uploadRes.json();
+      
+      if (!uploadRes.ok || uploadData.status !== 'success') {
+        throw new Error(uploadData.message || 'Video upload failed');
+      }
+
+      setUploadProgress(50);
+      setStatusMessage('Running AI face detection...');
+
+      // 2. Run Detection
+      const detectionFormData = new FormData();
+      detectionFormData.append('video_path', uploadData.data.video_path);
+
+      const detectionRes = await fetch('http://localhost:8000/api/run-detection', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${user?.token}`,
+        },
+        body: detectionFormData,
+      });
+
+      const detectionData = await detectionRes.json();
+      
+      if (!detectionRes.ok || detectionData.status !== 'success') {
+        throw new Error(detectionData.message || 'Detection failed');
+      }
+
+      setUploadProgress(100);
+      setIsUploading(false);
+      setUploadComplete(true);
+      setStatusMessage(`${detectionData.message}`);
+    } catch (err) {
+      setIsUploading(false);
+      setError(err.message || 'An error occurred during processing');
     }
-
-    setIsUploading(false);
-    setUploadComplete(true);
   };
 
   const resetUpload = () => {
@@ -60,6 +106,8 @@ export default function UploadVideoPage() {
     setUploadProgress(0);
     setIsUploading(false);
     setUploadComplete(false);
+    setStatusMessage('');
+    setError(null);
   };
 
   return (
@@ -137,11 +185,21 @@ export default function UploadVideoPage() {
                   <div className="progress-bar">
                     <div className="progress-fill" style={{ width: `${uploadProgress}%` }}></div>
                   </div>
-                  <span className="progress-text">{uploadProgress}%</span>
+                  <div style={{display: 'flex', justifyContent: 'space-between', marginTop: '0.5rem'}}>
+                    <span className="progress-text">{statusMessage}</span>
+                    <span className="progress-text">{uploadProgress}%</span>
+                  </div>
                 </div>
               )}
 
-              {!isUploading && (
+              {error && (
+                <div className="alert alert-error" style={{marginTop: '1rem'}}>
+                  <span className="alert-icon">⚠</span>
+                  {error}
+                </div>
+              )}
+
+              {!isUploading && !error && (
                 <div className="upload-actions">
                   <button className="btn btn-ghost" onClick={resetUpload} id="cancel-upload-btn">Cancel</button>
                   <button className="btn btn-primary" onClick={handleUpload} id="start-upload-btn">
@@ -160,8 +218,8 @@ export default function UploadVideoPage() {
                   <path d="M20 32L28 40L44 24" stroke="var(--color-success)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </div>
-              <h3>Upload Complete!</h3>
-              <p>Your video is being processed. You'll be notified when results are ready.</p>
+              <h3>Processing Complete!</h3>
+              <p>{statusMessage || 'Your video has been processed.'}</p>
               <button className="btn btn-primary" onClick={resetUpload} id="upload-another-btn">
                 Upload Another
               </button>

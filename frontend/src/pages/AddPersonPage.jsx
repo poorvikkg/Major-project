@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Navbar from '../components/Navbar';
+import { useAuth } from '../context/AuthContext';
 
 export default function AddPersonPage() {
   const [formData, setFormData] = useState({
@@ -13,6 +14,7 @@ export default function AddPersonPage() {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const { user } = useAuth();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -48,18 +50,44 @@ export default function AddPersonPage() {
     if (!validate()) return;
 
     setIsSubmitting(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setIsSubmitting(false);
-    setSubmitSuccess(true);
+    
+    const formDataObj = new FormData();
+    formDataObj.append('name', formData.name);
+    formDataObj.append('age', formData.age);
+    formDataObj.append('gender', formData.gender);
+    formDataObj.append('description', formData.description);
+    if (photo) {
+      formDataObj.append('image', photo);
+    }
 
-    // Reset form after success
-    setTimeout(() => {
-      setFormData({ name: '', age: '', gender: '', description: '' });
-      setPhoto(null);
-      setPhotoPreview(null);
-      setSubmitSuccess(false);
-    }, 3000);
+    try {
+      const response = await fetch('http://localhost:8000/api/add-person', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${user?.token}`
+        },
+        body: formDataObj,
+      });
+      
+      const data = await response.json();
+      setIsSubmitting(false);
+
+      if (response.ok && data.status === 'success') {
+        setSubmitSuccess(true);
+        // Reset form after success
+        setTimeout(() => {
+          setFormData({ name: '', age: '', gender: '', description: '' });
+          setPhoto(null);
+          setPhotoPreview(null);
+          setSubmitSuccess(false);
+        }, 3000);
+      } else {
+        setErrors({ submit: data.message || 'Failed to add person. Are you sure you are logged in as admin?' });
+      }
+    } catch (err) {
+      setIsSubmitting(false);
+      setErrors({ submit: 'Network error occurred. Please try again later.' });
+    }
   };
 
   return (
@@ -85,6 +113,13 @@ export default function AddPersonPage() {
           <div className="alert alert-success fade-in" id="submit-success">
             <span className="alert-icon">✓</span>
             Missing person record has been successfully created!
+          </div>
+        )}
+
+        {errors.submit && (
+          <div className="alert alert-error" style={{marginBottom: "1rem"}}>
+            <span className="alert-icon">⚠</span>
+            {errors.submit}
           </div>
         )}
 

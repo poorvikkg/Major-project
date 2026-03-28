@@ -31,10 +31,7 @@ export default function LoginPage() {
     }
 
     setIsLoading(true);
-    // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 800));
-
-    const result = login(email, password);
+    const result = await login(email, password);
     setIsLoading(false);
 
     if (result.success) {

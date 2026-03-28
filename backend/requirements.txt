@@ -1,0 +1,19 @@
+# ── Core Framework ──────────────────────────────────────────────
+fastapi
+uvicorn[standard]
+python-multipart
+
+# ── Database ────────────────────────────────────────────────────
+sqlalchemy
+psycopg2-binary
+
+# ── Authentication ──────────────────────────────────────────────
+PyJWT
+
+# ── Image / Video Processing ───────────────────────────────────
+opencv-python-headless
+numpy
+
+# ── Face Recognition (optional — falls back to OpenCV if absent)
+# deepface
+# tensorflow

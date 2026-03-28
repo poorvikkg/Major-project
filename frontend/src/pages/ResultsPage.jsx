@@ -1,59 +1,50 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
-
-const MOCK_RESULTS = [
-  {
-    id: 1,
-    personName: 'Rahul Sharma',
-    age: 28,
-    matchConfidence: 94.2,
-    location: 'Camera #12 — MG Road Junction',
-    timestamp: '2026-03-28 14:32:18',
-    status: 'confirmed',
-  },
-  {
-    id: 2,
-    personName: 'Priya Patel',
-    age: 35,
-    matchConfidence: 87.5,
-    location: 'Camera #07 — Bus Station Gate 3',
-    timestamp: '2026-03-28 11:05:42',
-    status: 'pending',
-  },
-  {
-    id: 3,
-    personName: 'Arjun Mehta',
-    age: 16,
-    matchConfidence: 78.1,
-    location: 'Camera #22 — Railway Station Platform 2',
-    timestamp: '2026-03-27 22:15:09',
-    status: 'reviewing',
-  },
-  {
-    id: 4,
-    personName: 'Kavitha Nair',
-    age: 42,
-    matchConfidence: 91.8,
-    location: 'Camera #15 — Shopping Mall Entrance',
-    timestamp: '2026-03-27 16:48:33',
-    status: 'confirmed',
-  },
-  {
-    id: 5,
-    personName: 'Mohammed Ali',
-    age: 55,
-    matchConfidence: 65.3,
-    location: 'Camera #03 — Park Entrance',
-    timestamp: '2026-03-27 09:20:11',
-    status: 'dismissed',
-  },
-];
+import { useAuth } from '../context/AuthContext';
 
 export default function ResultsPage() {
   const [filter, setFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [results, setResults] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const { user } = useAuth();
 
-  const filteredResults = MOCK_RESULTS.filter(r => {
+  useEffect(() => {
+    const fetchResults = async () => {
+      try {
+        const response = await fetch('http://localhost:8000/api/results', {
+          headers: {
+            'Authorization': `Bearer ${user?.token}`
+          }
+        });
+        const data = await response.json();
+        
+        if (response.ok && data.status === 'success') {
+          // Map backend data format to frontend expectations
+          const formatted = data.data.map(item => ({
+            id: item.id,
+            personName: item.person_name,
+            matchConfidence: item.confidence_score,
+            location: item.camera_id ? `Camera #${item.camera_id}` : 'Uploaded Video',
+            timestamp: new Date(item.timestamp).toLocaleString(),
+            status: 'confirmed', // Assuming backend doesn't have status on logs for now
+            snapshotPath: item.snapshot_path
+          }));
+          setResults(formatted);
+        } else {
+          setError(data.message || 'Failed to fetch results');
+        }
+      } catch (err) {
+        setError('Network error loading results');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchResults();
+  }, [user]);
+
+  const filteredResults = results.filter(r => {
     const matchesFilter = filter === 'all' || r.status === filter;
     const matchesSearch = r.personName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       r.location.toLowerCase().includes(searchQuery.toLowerCase());
@@ -122,7 +113,16 @@ export default function ResultsPage() {
 
         {/* Results Grid */}
         <div className="results-grid" id="results-grid">
-          {filteredResults.length === 0 ? (
+          {isLoading ? (
+            <div className="empty-state">
+              <span className="btn-loader" style={{borderTopColor: 'var(--color-primary)', width: '3rem', height: '3rem'}}></span>
+              <p>Loading results...</p>
+            </div>
+          ) : error ? (
+            <div className="empty-state" style={{color: 'var(--color-danger)'}}>
+              <p>{error}</p>
+            </div>
+          ) : filteredResults.length === 0 ? (
             <div className="empty-state">
               <svg viewBox="0 0 64 64" fill="none" width="64" height="64" opacity="0.3">
                 <circle cx="32" cy="32" r="28" stroke="currentColor" strokeWidth="2"/>
@@ -148,7 +148,6 @@ export default function ResultsPage() {
                     </div>
                     <div className="result-info">
                       <h3 className="result-name">{result.personName}</h3>
-                      <p className="result-age">Age: {result.age}</p>
                     </div>
                     <span className={`badge ${badge.className}`}>{badge.label}</span>
                   </div>
