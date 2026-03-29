@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+python-multipart
+deepface
+numpy
+tf-keras ; sys_platform == "darwin" or sys_platform == "linux" or sys_platform == "win32"
+opencv-python-headless

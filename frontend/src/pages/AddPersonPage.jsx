@@ -9,8 +9,8 @@ export default function AddPersonPage() {
     gender: '',
     description: '',
   });
-  const [photo, setPhoto] = useState(null);
-  const [photoPreview, setPhotoPreview] = useState(null);
+  const [photos, setPhotos] = useState([]);
+  const [photoPreviews, setPhotoPreviews] = useState([]);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -25,12 +25,14 @@ export default function AddPersonPage() {
   };
 
   const handlePhotoChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setPhoto(file);
-      const reader = new FileReader();
-      reader.onloadend = () => setPhotoPreview(reader.result);
-      reader.readAsDataURL(file);
+    const files = Array.from(e.target.files);
+    if (files.length > 0) {
+      setPhotos(prev => [...prev, ...files]);
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onloadend = () => setPhotoPreviews(prev => [...prev, reader.result]);
+        reader.readAsDataURL(file);
+      });
     }
   };
 
@@ -56,8 +58,10 @@ export default function AddPersonPage() {
     formDataObj.append('age', formData.age);
     formDataObj.append('gender', formData.gender);
     formDataObj.append('description', formData.description);
-    if (photo) {
-      formDataObj.append('image', photo);
+    if (photos.length > 0) {
+      photos.forEach(photo => {
+        formDataObj.append('images', photo);
+      });
     }
 
     try {
@@ -77,8 +81,8 @@ export default function AddPersonPage() {
         // Reset form after success
         setTimeout(() => {
           setFormData({ name: '', age: '', gender: '', description: '' });
-          setPhoto(null);
-          setPhotoPreview(null);
+          setPhotos([]);
+          setPhotoPreviews([]);
           setSubmitSuccess(false);
         }, 3000);
       } else {
@@ -129,8 +133,12 @@ export default function AddPersonPage() {
             <div className="form-section photo-section">
               <h2 className="section-title">Photograph</h2>
               <label htmlFor="photo-upload" className="photo-upload-area" id="photo-upload-label">
-                {photoPreview ? (
-                  <img src={photoPreview} alt="Preview" className="photo-preview" />
+                {photoPreviews.length > 0 ? (
+                  <div className="photos-preview-grid" style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', padding: '10px' }}>
+                    {photoPreviews.map((preview, index) => (
+                      <img key={index} src={preview} alt={`Preview ${index}`} className="photo-preview" style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '4px' }} />
+                    ))}
+                  </div>
                 ) : (
                   <div className="photo-placeholder">
                     <svg viewBox="0 0 48 48" fill="none" width="48" height="48">
@@ -138,7 +146,7 @@ export default function AddPersonPage() {
                       <circle cx="18" cy="22" r="4" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.4"/>
                       <path d="M6 34L16 24L26 34L34 26L42 34" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.4"/>
                     </svg>
-                    <p>Click to upload photo</p>
+                    <p>Click to upload photos</p>
                     <span>JPG, PNG up to 5MB</span>
                   </div>
                 )}
@@ -146,6 +154,7 @@ export default function AddPersonPage() {
                   type="file" 
                   id="photo-upload" 
                   accept="image/*" 
+                  multiple
                   onChange={handlePhotoChange}
                   style={{ display: 'none' }}
                 />
@@ -227,8 +236,8 @@ export default function AddPersonPage() {
               className="btn btn-ghost"
               onClick={() => {
                 setFormData({ name: '', age: '', gender: '', description: '' });
-                setPhoto(null);
-                setPhotoPreview(null);
+                setPhotos([]);
+                setPhotoPreviews([]);
                 setErrors({});
               }}
               id="reset-form-btn"

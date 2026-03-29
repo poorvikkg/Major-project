@@ -26,7 +26,7 @@ def create_person(
     gender: str = Form(...),
     description: str = Form(""),
     reported_by: Optional[int] = Form(None),
-    image: Optional[UploadFile] = File(None),
+    images: list[UploadFile] = File(default=[]),
     db: Session = Depends(get_db),
     current_user: dict = Depends(require_admin),
 ):
@@ -50,7 +50,7 @@ def create_person(
         description=description,
         created_by=int(current_user["sub"]),
         reported_by=reported_by,
-        image=image,
+        images=images,
     )
 
     return success_response("Missing person added successfully", data={

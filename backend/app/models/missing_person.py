@@ -16,7 +16,7 @@ class MissingPerson(Base):
     age = Column(Integer, nullable=False)
     gender = Column(String(20), nullable=False)
     description = Column(Text, nullable=True)
-    image_path = Column(String(500), nullable=True)
+    image_path = Column(Text, nullable=True)
     embedding_path = Column(String(500), nullable=True)
     status = Column(String(20), nullable=False, default="missing")  # missing | found
 
