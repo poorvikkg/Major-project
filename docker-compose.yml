@@ -3,7 +3,7 @@ version: "3.9"
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: mpds_postgres
+    container_name: Major_project_DB
     restart: unless-stopped
     environment:
       POSTGRES_USER: poorvik

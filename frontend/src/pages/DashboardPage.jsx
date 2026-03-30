@@ -9,7 +9,7 @@ export default function DashboardPage() {
     {
       id: 'add-person',
       title: 'Add Missing Person',
-      description: 'Register a new missing person with their details and photo for identification.',
+      description: 'Register a new missing person with their details and photograph.',
       icon: (
         <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="24" cy="16" r="8" stroke="currentColor" strokeWidth="2.5" fill="none"/>
@@ -20,6 +20,22 @@ export default function DashboardPage() {
       ),
       path: '/add-person',
       color: 'primary',
+    },
+    {
+      id: 'missing-persons',
+      title: 'Missing Persons Registry',
+      description: 'Browse all registered missing persons, filter by status, and view case details.',
+      icon: (
+        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="18" cy="16" r="7" stroke="currentColor" strokeWidth="2.5" fill="none"/>
+          <path d="M4 40C4 33 10 28 18 28" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
+          <circle cx="34" cy="20" r="5" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.6"/>
+          <path d="M24 40C24 34.5 28.5 30 34 30" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.6"/>
+          <path d="M40 34L44 38" stroke="currentColor" strokeWidth="2" strokeLinecap="round" opacity="0.4"/>
+        </svg>
+      ),
+      path: '/missing-persons',
+      color: 'info',
     },
     {
       id: 'upload-video',

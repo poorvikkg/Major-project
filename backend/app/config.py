@@ -17,7 +17,7 @@ for d in (IMAGES_DIR, EMBEDDINGS_DIR, OUTPUTS_DIR, VIDEOS_DIR):
     d.mkdir(parents=True, exist_ok=True)
 
 # ── Database ──────────────────────────────────────────────────────────────────
-DB_HOST = os.getenv("DB_HOST", "localhost")
+DB_HOST = os.getenv("DB_HOST", "127.0.0.1")
 DB_PORT = os.getenv("DB_PORT", "5433")
 DB_NAME = os.getenv("DB_NAME", "major_project")
 DB_USER = os.getenv("DB_USER", "poorvik")

@@ -13,6 +13,7 @@ class Complainant(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(120), nullable=False)
     phone_number = Column(String(20), nullable=False)
+    alternate_phone = Column(String(20), nullable=True)
     email = Column(String(255), nullable=True)
     address = Column(Text, nullable=True)
     relation_to_person = Column(String(100), nullable=False)

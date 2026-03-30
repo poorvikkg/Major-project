@@ -14,11 +14,12 @@ export default function Navbar() {
   };
 
   const navLinks = [
-    { path: '/dashboard', label: 'Dashboard', icon: '⊞' },
-    { path: '/add-person', label: 'Add Person', icon: '＋' },
-    { path: '/upload-video', label: 'Upload CCTV', icon: '⎗' },
-    { path: '/results', label: 'Results', icon: '◉' },
-    { path: '/live-monitoring', label: 'Live Monitor', icon: '◎' },
+    { path: '/dashboard',        label: 'Dashboard',        icon: '⊞' },
+    { path: '/missing-persons',  label: 'Missing Persons',  icon: '👥' },
+    { path: '/add-person',       label: 'Add Person',       icon: '＋' },
+    { path: '/upload-video',     label: 'Upload CCTV',      icon: '⎗' },
+    { path: '/results',          label: 'Results',          icon: '◉' },
+    { path: '/live-monitoring',  label: 'Live Monitor',     icon: '◎' },
   ];
 
   return (
