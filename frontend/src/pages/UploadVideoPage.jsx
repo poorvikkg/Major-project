@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import { useAuth } from '../context/AuthContext';
 
@@ -11,8 +11,25 @@ export default function UploadVideoPage() {
   const [uploadComplete, setUploadComplete] = useState(false);
   const [statusMessage, setStatusMessage] = useState('');
   const [error, setError] = useState(null);
+  const [persons, setPersons] = useState([]);
+  const [targetPersonId, setTargetPersonId] = useState('');
   const fileInputRef = useRef(null);
   const { user } = useAuth();
+
+  useEffect(() => {
+    const fetchPersons = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const headers = { 'Authorization': `Bearer ${token}` };
+        const res = await fetch('http://localhost:8000/api/persons', { headers });
+        const data = await res.json();
+        setPersons(data.data || []);
+      } catch (err) {
+        console.error("Failed to fetch persons:", err);
+      }
+    };
+    fetchPersons();
+  }, []);
 
   const handleDrag = (e) => {
     e.preventDefault();
@@ -77,6 +94,10 @@ export default function UploadVideoPage() {
       // 2. Run Detection
       const detectionFormData = new FormData();
       detectionFormData.append('video_path', uploadData.data.video_path);
+      
+      if (targetPersonId) {
+        detectionFormData.append('target_person_id', targetPersonId);
+      }
 
       const detectionRes = await fetch('http://localhost:8000/api/run-detection', {
         method: 'POST',
@@ -221,6 +242,36 @@ export default function UploadVideoPage() {
               >
                 Connect to Drive
               </button>
+            </div>
+          )}
+
+          {/* Target Person Selection */}
+          {!uploadComplete && (
+            <div className="person-selection" style={{ marginTop: '1.5rem', marginBottom: file ? '1.5rem' : '0', textAlign: 'left' }}>
+              <label htmlFor="target-person" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', color: 'var(--text-secondary)' }}>
+                Target Person to Find (Optional)
+              </label>
+              <select 
+                id="target-person"
+                value={targetPersonId}
+                onChange={(e) => setTargetPersonId(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '10px 12px',
+                  borderRadius: '6px',
+                  border: '1px solid var(--border-color)',
+                  backgroundColor: 'transparent',
+                  color: 'inherit',
+                  fontSize: '1rem',
+                  outline: 'none',
+                  cursor: 'pointer'
+                }}
+              >
+                <option value="">All Missing Persons (Default)</option>
+                {persons.filter(p => p.status === 'missing').map(p => (
+                  <option key={p.id} value={p.id}>{p.name} (ID: {p.id})</option>
+                ))}
+              </select>
             </div>
           )}
 

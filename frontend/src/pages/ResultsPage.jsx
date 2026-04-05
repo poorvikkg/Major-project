@@ -6,6 +6,7 @@ export default function ResultsPage() {
   const [filter, setFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [results, setResults] = useState([]);
+  const [activeTasks, setActiveTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const { user } = useAuth();
@@ -18,22 +19,31 @@ export default function ResultsPage() {
             'Authorization': `Bearer ${user?.token}`
           }
         });
+        const tasksRes = await fetch('http://localhost:8000/api/active-tasks', {
+          headers: { 'Authorization': `Bearer ${user?.token}` }
+        });
+        
         const data = await response.json();
+        const tasksData = await tasksRes.json();
         
         if (response.ok && data.status === 'success') {
-          // Map backend data format to frontend expectations
           const formatted = data.data.map(item => ({
             id: item.id,
             personName: item.person_name,
             matchConfidence: item.confidence_score,
             location: item.camera_id ? `Camera #${item.camera_id}` : 'Uploaded Video',
             timestamp: new Date(item.timestamp).toLocaleString(),
-            status: 'confirmed', // Assuming backend doesn't have status on logs for now
+            status: item.status || 'pending',
+            videoTime: item.video_time_sec ? `${Math.floor(item.video_time_sec / 60)}:${Math.floor(item.video_time_sec % 60).toString().padStart(2, '0')}` : null,
             snapshotPath: item.snapshot_path
           }));
           setResults(formatted);
         } else {
           setError(data.message || 'Failed to fetch results');
+        }
+
+        if (tasksRes.ok && tasksData.status === 'success') {
+          setActiveTasks(tasksData.data || []);
         }
       } catch (err) {
         setError('Network error loading results');
@@ -41,8 +51,46 @@ export default function ResultsPage() {
         setIsLoading(false);
       }
     };
+    
     fetchResults();
+    const interval = setInterval(fetchResults, 5000);
+    return () => clearInterval(interval);
   }, [user]);
+
+  const updateStatus = async (id, newStatus) => {
+    try {
+      const res = await fetch(`http://localhost:8000/api/results/${id}/status`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user?.token}`
+        },
+        body: JSON.stringify({ status: newStatus })
+      });
+      if (res.ok) {
+        setResults(prev => prev.map(r => r.id === id ? { ...r, status: newStatus } : r));
+      }
+    } catch (err) {
+      console.error("Failed to update status", err);
+    }
+  };
+
+  const deleteResult = async (id) => {
+    if (!window.confirm('Are you sure you want to completely delete this detection record?')) return;
+    try {
+      const res = await fetch(`http://localhost:8000/api/results/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${user?.token}`
+        }
+      });
+      if (res.ok) {
+        setResults(prev => prev.filter(r => r.id !== id));
+      }
+    } catch (err) {
+      console.error("Failed to delete", err);
+    }
+  };
 
   const filteredResults = results.filter(r => {
     const matchesFilter = filter === 'all' || r.status === filter;
@@ -133,58 +181,172 @@ export default function ResultsPage() {
               <p>No results match your filters</p>
             </div>
           ) : (
-            filteredResults.map((result, i) => {
-              const badge = getStatusBadge(result.status);
-              return (
+            <>
+              {/* Render Active Processing Tasks First outside of normal filters if in all or pending view */}
+              {(filter === 'all' || filter === 'pending') && activeTasks.map(task => (
                 <div
                   className="result-card"
+                  key={task.id}
+                  style={{ padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column', opacity: 0.8 }}
+                >
+                  <div style={{ 
+                      height: '180px', 
+                      backgroundColor: 'var(--bg-secondary)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderBottom: '1px solid var(--border-color)',
+                      flexDirection: 'column'
+                    }}
+                  >
+                    <span className="btn-loader" style={{ borderTopColor: 'var(--color-primary)', width: '2rem', height: '2rem', marginBottom: '1rem' }}></span>
+                    <span style={{ color: 'var(--text-secondary)' }}>Analyzing Video...</span>
+                  </div>
+                  <div className="result-content" style={{ padding: '1.25rem' }}>
+                    <div className="result-header" style={{ padding: 0, borderBottom: 'none', marginBottom: '1rem' }}>
+                      <div className="result-avatar" style={{ width: '32px', height: '32px', backgroundColor: 'var(--color-warning)' }}>
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="white" strokeWidth="2" fill="none"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                      </div>
+                      <div className="result-info">
+                        <h3 className="result-name" style={{ fontSize: '1.1rem' }}>Pending Target</h3>
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', padding: '0.2rem 0', marginBottom: '0.5rem' }}>
+                      <span style={{ color: 'var(--text-secondary)' }}>Status</span>
+                      <span className="badge badge-warning">Processing</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', padding: '0.2rem 0' }}>
+                      <span style={{ color: 'var(--text-secondary)' }}>Task Started</span>
+                      <span style={{ fontWeight: 500, color: 'var(--text-primary)' }}>{new Date(task.started_at).toLocaleTimeString()}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+
+              {/* Render Actual Results */}
+              {filteredResults.map((result, i) => {
+                const badge = getStatusBadge(result.status);
+                return (
+                  <div
+                    className="result-card"
                   key={result.id}
                   id={`result-${result.id}`}
-                  style={{ animationDelay: `${i * 0.08}s` }}
+                  style={{ animationDelay: `${i * 0.08}s`, padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}
                 >
-                  <div className="result-header">
-                    <div className="result-avatar">
-                      {result.personName.charAt(0)}
+                  {/* Thumbnail / Image Reveal */}
+                  <div 
+                    onClick={() => window.open(`http://localhost:8000/${result.snapshotPath}`, '_blank')}
+                    style={{ 
+                      height: '180px', 
+                      backgroundImage: result.snapshotPath ? `url(http://localhost:8000/${result.snapshotPath})` : 'none',
+                      backgroundColor: 'var(--bg-secondary)',
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      position: 'relative',
+                      cursor: 'pointer',
+                      borderBottom: '1px solid var(--border-color)'
+                    }}
+                  >
+                    {!result.snapshotPath && (
+                      <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>
+                        No Image Available
+                      </div>
+                    )}
+                    
+                    {/* Floating Badges */}
+                    <span 
+                      className={`badge ${badge.className}`} 
+                      style={{ position: 'absolute', top: '12px', right: '12px', boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}
+                    >
+                      {badge.label}
+                    </span>
+                    <div 
+                      style={{ 
+                        position: 'absolute', 
+                        bottom: '12px', 
+                        left: '12px', 
+                        background: 'rgba(0, 0, 0, 0.75)', 
+                        backdropFilter: 'blur(4px)',
+                        padding: '4px 8px', 
+                        borderRadius: '6px', 
+                        fontSize: '0.85rem', 
+                        color: getConfidenceColor(result.matchConfidence), 
+                        fontWeight: '600',
+                        border: `1px solid ${getConfidenceColor(result.matchConfidence)}40`
+                      }}
+                    >
+                      {result.matchConfidence}% Match
                     </div>
-                    <div className="result-info">
-                      <h3 className="result-name">{result.personName}</h3>
-                    </div>
-                    <span className={`badge ${badge.className}`}>{badge.label}</span>
                   </div>
 
-                  <div className="result-body">
-                    <div className="result-detail">
-                      <span className="detail-label"> Location</span>
-                      <span className="detail-value">{result.location}</span>
+                  <div className="result-content" style={{ padding: '1.25rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                    <div className="result-header" style={{ padding: 0, borderBottom: 'none', marginBottom: '1rem' }}>
+                      <div className="result-avatar" style={{ width: '32px', height: '32px', fontSize: '1rem' }}>
+                        {result.personName.charAt(0)}
+                      </div>
+                      <div className="result-info">
+                        <h3 className="result-name" style={{ fontSize: '1.1rem' }}>{result.personName}</h3>
+                      </div>
                     </div>
-                    <div className="result-detail">
-                      <span className="detail-label"> Detected</span>
-                      <span className="detail-value">{result.timestamp}</span>
-                    </div>
-                  </div>
 
-                  <div className="result-footer">
-                    <div className="confidence-bar-container">
-                      <div className="confidence-header">
-                        <span>Match Confidence</span>
-                        <span style={{ color: getConfidenceColor(result.matchConfidence), fontWeight: 600 }}>
-                          {result.matchConfidence}%
+                    <div className="result-body" style={{ gap: '0.5rem', marginBottom: '1.5rem', flex: 1 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', padding: '0.2rem 0' }}>
+                        <span style={{ color: 'var(--text-secondary)' }}>Source</span>
+                        <span style={{ fontWeight: 500, color: 'var(--text-primary)' }}>{result.location}</span>
+                      </div>
+                      {result.videoTime && (
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', padding: '0.2rem 0' }}>
+                          <span style={{ color: 'var(--text-secondary)' }}>Video Time</span>
+                          <span style={{ fontWeight: 500, color: 'var(--text-primary)' }}>{result.videoTime}</span>
+                        </div>
+                      )}
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', padding: '0.2rem 0' }}>
+                        <span style={{ color: 'var(--text-secondary)' }}>Logged On</span>
+                        <span style={{ fontWeight: 500, color: 'var(--text-primary)' }}>
+                          {result.timestamp.split(', ').length > 1 ? result.timestamp.split(', ')[1] : result.timestamp}
                         </span>
                       </div>
-                      <div className="confidence-bar">
-                        <div 
-                          className="confidence-fill" 
-                          style={{ 
-                            width: `${result.matchConfidence}%`,
-                            background: getConfidenceColor(result.matchConfidence)
-                          }}
-                        ></div>
-                      </div>
+                    </div>
+                    
+                    {/* Streamlined Action Buttons */}
+                    <div className="result-actions" style={{ display: 'flex', gap: '0.5rem' }}>
+                      {result.status !== 'confirmed' && (
+                        <button 
+                          className="btn btn-sm btn-primary" 
+                          onClick={() => updateStatus(result.id, 'confirmed')}
+                          style={{ flex: 1, backgroundColor: 'var(--color-success)', color: 'white', border: 'none' }}
+                        >
+                          Confirm
+                        </button>
+                      )}
+                      
+                      {result.status !== 'dismissed' && (
+                        <button 
+                          className="btn btn-sm" 
+                          onClick={() => updateStatus(result.id, 'dismissed')}
+                          style={{ flex: 1, backgroundColor: 'transparent', border: '1px solid var(--border-color)', color: 'var(--text-secondary)' }}
+                        >
+                          Dismiss
+                        </button>
+                      )}
+
+                      <button 
+                        className="btn btn-sm" 
+                        onClick={() => deleteResult(result.id)}
+                        style={{ padding: '0.4rem 0.6rem', backgroundColor: 'transparent', border: '1px solid var(--color-danger)', color: 'var(--color-danger)' }}
+                        title="Delete Record"
+                      >
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="3 6 5 6 21 6"></polyline>
+                          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                      </button>
                     </div>
                   </div>
                 </div>
               );
-            })
+              })}
+            </>
           )}
         </div>
       </div>
