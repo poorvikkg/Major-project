@@ -154,11 +154,11 @@ export default function ResultsPage() {
 
                   <div className="result-body">
                     <div className="result-detail">
-                      <span className="detail-label">📍 Location</span>
+                      <span className="detail-label"> Location</span>
                       <span className="detail-value">{result.location}</span>
                     </div>
                     <div className="result-detail">
-                      <span className="detail-label">🕐 Detected</span>
+                      <span className="detail-label"> Detected</span>
                       <span className="detail-value">{result.timestamp}</span>
                     </div>
                   </div>

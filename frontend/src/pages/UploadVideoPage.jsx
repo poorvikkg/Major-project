@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 
 export default function UploadVideoPage() {
   const [file, setFile] = useState(null);
+  const [uploadMode, setUploadMode] = useState('local'); // 'local' or 'cloud'
   const [dragActive, setDragActive] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
@@ -129,7 +130,46 @@ export default function UploadVideoPage() {
         </div>
 
         <div className="upload-card" id="upload-card">
+          {/* Upload Mode Tabs */}
           {!file && !uploadComplete && (
+            <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.5rem' }}>
+              <button 
+                onClick={() => setUploadMode('local')}
+                style={{
+                  padding: '8px 16px',
+                  fontWeight: uploadMode === 'local' ? '600' : '400',
+                  color: uploadMode === 'local' ? 'var(--color-primary)' : 'var(--text-secondary)',
+                  borderBottom: uploadMode === 'local' ? '2px solid var(--color-primary)' : '2px solid transparent',
+                  background: 'none',
+                  borderTop: 'none',
+                  borderLeft: 'none',
+                  borderRight: 'none',
+                  cursor: 'pointer'
+                }}
+              >
+                Local Upload
+              </button>
+              <button 
+                onClick={() => setUploadMode('cloud')}
+                style={{
+                  padding: '8px 16px',
+                  fontWeight: uploadMode === 'cloud' ? '600' : '400',
+                  color: uploadMode === 'cloud' ? 'var(--color-primary)' : 'var(--text-secondary)',
+                  borderBottom: uploadMode === 'cloud' ? '2px solid var(--color-primary)' : '2px solid transparent',
+                  background: 'none',
+                  borderTop: 'none',
+                  borderLeft: 'none',
+                  borderRight: 'none',
+                  cursor: 'pointer'
+                }}
+              >
+                Import from Drive
+              </button>
+            </div>
+          )}
+
+          {/* Local Upload UI */}
+          {uploadMode === 'local' && !file && !uploadComplete && (
             <div
               className={`drop-zone ${dragActive ? 'active' : ''}`}
               onDragEnter={handleDrag}
@@ -162,6 +202,29 @@ export default function UploadVideoPage() {
             </div>
           )}
 
+          {/* Cloud Drive UI */}
+          {uploadMode === 'cloud' && !file && !uploadComplete && (
+            <div className="drop-zone" style={{ flexDirection: 'column', gap: '1rem', padding: '3rem' }}>
+              <div style={{ color: 'var(--color-primary)' }}>
+                <svg viewBox="0 0 24 24" fill="none" width="60" height="60" stroke="currentColor" strokeWidth="1.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
+                </svg>
+              </div>
+              <h3 style={{ fontSize: '1.2rem', fontWeight: '500', color: 'var(--text-primary)' }}>Connect Cloud Storage</h3>
+              <p style={{ color: 'var(--text-secondary)', textAlign: 'center', maxWidth: '400px' }}>
+                Securely browse and select surveillance footage directly from your connected government cloud drives.
+              </p>
+              <button 
+                className="btn btn-primary" 
+                style={{ marginTop: '1rem' }}
+                onClick={() => alert("Cloud Drive integration requires OAuth configuration with Google Workspace or Microsoft Azure. Please contact the IT Administration Department.")}
+              >
+                Connect to Drive
+              </button>
+            </div>
+          )}
+
+          {/* File Selected & Processing UI */}
           {file && !uploadComplete && (
             <div className="file-preview" id="file-preview">
               <div className="file-info">
@@ -176,7 +239,7 @@ export default function UploadVideoPage() {
                   <p className="file-size">{formatSize(file.size)}</p>
                 </div>
                 {!isUploading && (
-                  <button className="btn btn-ghost btn-sm" onClick={resetUpload} id="remove-file-btn">✕</button>
+                  <button className="btn btn-ghost btn-sm" onClick={resetUpload} id="remove-file-btn"></button>
                 )}
               </div>
 
@@ -194,7 +257,7 @@ export default function UploadVideoPage() {
 
               {error && (
                 <div className="alert alert-error" style={{marginTop: '1rem'}}>
-                  <span className="alert-icon">⚠</span>
+                  <span className="alert-icon"></span>
                   {error}
                 </div>
               )}

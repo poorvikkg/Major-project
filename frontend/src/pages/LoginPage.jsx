@@ -77,7 +77,7 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="login-form" id="login-form">
             {error && (
               <div className="alert alert-error" id="login-error">
-                <span className="alert-icon">⚠</span>
+                <span className="alert-icon"></span>
                 {error}
               </div>
             )}
@@ -85,7 +85,7 @@ export default function LoginPage() {
             <div className="form-group">
               <label htmlFor="email" className="form-label">Email Address</label>
               <div className="input-wrapper">
-                <span className="input-icon">✉</span>
+                <span className="input-icon"></span>
                 <input
                   type="email"
                   id="email"
@@ -101,7 +101,7 @@ export default function LoginPage() {
             <div className="form-group">
               <label htmlFor="password" className="form-label">Password</label>
               <div className="input-wrapper">
-                <span className="input-icon">🔒</span>
+                <span className="input-icon"></span>
                 <input
                   type="password"
                   id="password"

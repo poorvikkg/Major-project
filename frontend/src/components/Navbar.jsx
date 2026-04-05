@@ -15,7 +15,7 @@ export default function Navbar() {
 
   const navLinks = [
     { path: '/dashboard',        label: 'Dashboard',        icon: '⊞' },
-    { path: '/missing-persons',  label: 'Missing Persons',  icon: '👥' },
+    { path: '/missing-persons',  label: 'Missing Persons',  icon: '' },
     { path: '/add-person',       label: 'Add Person',       icon: '＋' },
     { path: '/upload-video',     label: 'Upload CCTV',      icon: '⎗' },
     { path: '/results',          label: 'Results',          icon: '◉' },
@@ -26,7 +26,7 @@ export default function Navbar() {
     <nav className="navbar" id="main-navbar">
       <div className="navbar-inner">
         <Link to="/dashboard" className="navbar-brand" id="navbar-brand">
-          <span className="brand-icon">🛡</span>
+          <span className="brand-icon"></span>
           <span className="brand-text">MPDS</span>
         </Link>
 

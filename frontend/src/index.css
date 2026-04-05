@@ -2,30 +2,30 @@
    MISSING PERSON DETECTION SYSTEM — Professional Design System
    ============================================ */
 
-/* === CSS Custom Properties (Clean Dark Mode) === */
+/* === CSS Custom Properties (Gov Light Theme) === */
 :root {
-  --bg-primary: #09090b;
-  --bg-secondary: #000000;
-  --bg-card: #09090b;
-  --bg-card-hover: #18181b;
-  --bg-input: #09090b;
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f1f5f9;
+  --bg-input: #ffffff;
 
-  --border-color: #27272a;
-  --border-color-strong: #3f3f46;
-  --border-focus: #e4e4e7;
+  --border-color: #e2e8f0;
+  --border-color-strong: #cbd5e1;
+  --border-focus: #1e3a8a;
 
-  --text-primary: #fafafa;
-  --text-secondary: #a1a1aa;
-  --text-muted: #71717a;
-  --text-inverse: #09090b;
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --text-inverse: #ffffff;
 
-  --color-primary: #fafafa;
-  --color-primary-hover: #e4e4e7;
+  --color-primary: #1e3a8a; /* Deep Navy Blue */
+  --color-primary-hover: #1e40af;
   --color-accent: #2563eb;
-  --color-success: #16a34a;
-  --color-warning: #ca8a04;
-  --color-danger: #dc2626;
-  --color-info: #2563eb;
+  --color-success: #15803d;
+  --color-warning: #b45309;
+  --color-danger: #b91c1c;
+  --color-info: #1d4ed8;
 
   --space-xs: 4px;
   --space-sm: 8px;
@@ -1732,4 +1732,172 @@ img {
 
 @media (max-width: 540px) {
   .mp-grid { grid-template-columns: 1fr; }
+}
+
+/* ============================================
+   LIVE MONITORING PAGE
+   ============================================ */
+.live-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background: rgba(185, 28, 28, 0.08);
+  border: 1px solid rgba(185, 28, 28, 0.25);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--color-danger);
+  letter-spacing: 0.05em;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-danger);
+  animation: livePulse 1.4s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes livePulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.4; transform: scale(0.75); }
+}
+
+.monitor-layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: var(--space-lg);
+  align-items: start;
+}
+
+.main-feed { display: flex; flex-direction: column; gap: var(--space-md); }
+
+.feed-display {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.feed-placeholder {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #0f172a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.feed-info-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border-color);
+  font-size: var(--font-size-xs);
+}
+
+.feed-meta { display: flex; align-items: center; gap: var(--space-md); }
+.feed-cam-name { font-weight: 500; color: var(--text-primary); }
+
+.feed-status {
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+}
+
+.feed-status.online {
+  color: var(--color-success);
+  background: rgba(21, 128, 61, 0.1);
+  border: 1px solid rgba(21, 128, 61, 0.2);
+}
+
+.feed-status.offline {
+  color: var(--text-muted);
+  background: var(--bg-card-hover);
+  border: 1px solid var(--border-color);
+}
+
+.feed-timestamp { color: var(--text-muted); font-variant-numeric: tabular-nums; }
+
+.camera-sidebar {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  position: sticky;
+  top: 72px;
+}
+
+.sidebar-title {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.camera-list  { display: flex; flex-direction: column; gap: 4px; }
+
+.camera-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  text-align: left;
+  transition: background var(--transition-fast);
+}
+
+.camera-item:hover    { background: var(--bg-card-hover); }
+.camera-item.active   { background: var(--bg-card-hover); border-color: var(--border-color-strong); }
+.camera-item.offline  { opacity: 0.55; }
+.camera-item-info     { display: flex; align-items: center; gap: 8px; }
+
+.cam-status-dot       { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.cam-status-dot.online  { background: var(--color-success); }
+.cam-status-dot.offline { background: var(--text-muted); }
+
+.cam-name     { font-size: var(--font-size-xs); font-weight: 500; color: var(--text-primary); }
+.cam-location { font-size: var(--font-size-xs); color: var(--text-muted); }
+
+.alert-badge {
+  background: var(--color-danger);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.sidebar-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--border-color);
+}
+
+.sidebar-stat        { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.sidebar-stat-value  { font-size: var(--font-size-lg); font-weight: 700; color: var(--text-primary); }
+.sidebar-stat-label  { font-size: 10px; color: var(--text-muted); text-align: center; font-weight: 500; }
+
+/* Alert overrides for light theme */
+.alert-error   { background: rgba(185,28,28,0.06); border-color: rgba(185,28,28,0.2); color: var(--color-danger); }
+.alert-success { background: rgba(21,128,61,0.06); border-color: rgba(21,128,61,0.2); color: var(--color-success); }
+
+@media (max-width: 960px) {
+  .monitor-layout { grid-template-columns: 1fr; }
+  .camera-sidebar { position: static; }
 }

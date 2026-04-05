@@ -137,7 +137,7 @@ export default function PersonDetailPage() {
                   </div>
                 )}
                 <div className={`pd-gallery-status-badge ${isFound ? 'found' : 'missing'}`}>
-                  {isFound ? '✓ Found' : '⚠ Missing'}
+                  {isFound ? ' Found' : ' Missing'}
                 </div>
               </div>
               {images.length > 1 && (
@@ -181,7 +181,7 @@ export default function PersonDetailPage() {
                   disabled={statusUpdating}
                   id="btn-toggle-status"
                 >
-                  {statusUpdating ? <><span className="btn-loader"/> Updating…</> : isFound ? 'Mark as Missing' : '✓ Mark as Found'}
+                  {statusUpdating ? <><span className="btn-loader"/> Updating…</> : isFound ? 'Mark as Missing' : ' Mark as Found'}
                 </button>
                 <button
                   type="button"
@@ -190,7 +190,7 @@ export default function PersonDetailPage() {
                   disabled={deleting}
                   id="btn-delete-person"
                 >
-                  {deleting ? <><span className="btn-loader"/> Deleting…</> : '🗑 Delete Record'}
+                  {deleting ? <><span className="btn-loader"/> Deleting…</> : ' Delete Record'}
                 </button>
               </div>
             )}
@@ -206,7 +206,7 @@ export default function PersonDetailPage() {
             </div>
 
             {/* A. Personal Details */}
-            <Section title="Personal Details" icon="👤">
+            <Section title="Personal Details" icon="">
               <InfoRow label="Full Name"    value={p.name} />
               <InfoRow label="Nickname"     value={p.nickname} />
               <InfoRow label="Age"          value={p.age ? `${p.age} years` : null} />
@@ -220,7 +220,7 @@ export default function PersonDetailPage() {
             </Section>
 
             {/* B. Physical Identification */}
-            <Section title="Physical Identification" icon="🔍">
+            <Section title="Physical Identification" icon="">
               <InfoRow label="Face Shape"   value={p.face_shape} />
               <InfoRow label="Hair Color"   value={p.hair_color} />
               <InfoRow label="Eye Color"    value={p.eye_color} />
@@ -235,7 +235,7 @@ export default function PersonDetailPage() {
             </Section>
 
             {/* C. Last Seen */}
-            <Section title="Last Seen Details" icon="📍">
+            <Section title="Last Seen Details" icon="">
               <InfoRow label="Location"    value={p.last_seen_location} />
               <InfoRow label="Date"        value={p.last_seen_date} />
               <InfoRow label="Time"        value={p.last_seen_time} />
@@ -245,7 +245,7 @@ export default function PersonDetailPage() {
             </Section>
 
             {/* D. Additional */}
-            <Section title="Additional Information" icon="📋">
+            <Section title="Additional Information" icon="">
               <InfoRow label="Occupation"   value={p.occupation} />
               <InfoRow label="Languages"    value={p.languages_known} />
               {p.habits && (
@@ -276,7 +276,7 @@ export default function PersonDetailPage() {
 
             {/* E. Complainant */}
             {p.complainant && (
-              <Section title="Complainant Details" icon="📞">
+              <Section title="Complainant Details" icon="">
                 <InfoRow label="Name"        value={p.complainant.name} />
                 <InfoRow label="Relation"    value={p.complainant.relation_to_person} />
                 <InfoRow label="Phone"       value={p.complainant.phone_number} />
@@ -287,7 +287,7 @@ export default function PersonDetailPage() {
             )}
 
             {/* F. Detection Logs */}
-            <Section title="Detection Logs" icon="🎥">
+            <Section title="Detection Logs" icon="">
               {logs.length === 0 ? (
                 <p className="pd-no-logs">No detections recorded yet for this person.</p>
               ) : (

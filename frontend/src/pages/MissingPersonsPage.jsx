@@ -64,7 +64,7 @@ export default function MissingPersonsPage() {
         {/* Controls */}
         <div className="mp-controls">
           <div className="mp-search-wrap">
-            <span className="mp-search-icon">🔍</span>
+            <span className="mp-search-icon"></span>
             <input
               type="text"
               className="form-input mp-search"
@@ -103,7 +103,7 @@ export default function MissingPersonsPage() {
 
         {!loading && !error && filtered.length === 0 && (
           <div className="mp-empty">
-            <div className="mp-empty-icon">🔎</div>
+            <div className="mp-empty-icon"></div>
             <h3>No records found</h3>
             <p>{search ? 'Try a different search term.' : 'No missing persons are registered yet.'}</p>
             <Link to="/add-person" className="btn btn-primary" style={{marginTop:'1rem'}}>
@@ -144,18 +144,18 @@ export default function MissingPersonsPage() {
 
                   <div className="mp-card-meta">
                     <span className="mp-meta-item">
-                      <span className="mp-meta-icon">👤</span>
+                      <span className="mp-meta-icon"></span>
                       {p.age ? `${p.age} yrs` : '—'} · {p.gender ? p.gender.charAt(0).toUpperCase() + p.gender.slice(1) : '—'}
                     </span>
                     {p.last_seen_location && (
                       <span className="mp-meta-item">
-                        <span className="mp-meta-icon">📍</span>
+                        <span className="mp-meta-icon"></span>
                         <span className="mp-meta-truncate">{p.last_seen_location}</span>
                       </span>
                     )}
                     {p.last_seen_date && (
                       <span className="mp-meta-item">
-                        <span className="mp-meta-icon">📅</span>
+                        <span className="mp-meta-icon"></span>
                         {p.last_seen_date}
                       </span>
                     )}

@@ -1,9 +1,57 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/Navbar';
 
 export default function DashboardPage() {
   const { user } = useAuth();
+  const [stats, setStats] = useState([
+    { label: 'Cases Active', value: '...', trend: '', trendUp: true },
+    { label: 'Persons Found', value: '...', trend: '', trendUp: true },
+    { label: 'CCTV Sources', value: '...', trend: '', trendUp: true },
+    { label: 'Alerts Total', value: '...', trend: '', trendUp: true },
+  ]);
+
+  useEffect(() => {
+    const fetchDashboardStats = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const headers = {
+          'Authorization': `Bearer ${token}`
+        };
+
+        // Fetch persons
+        const personsRes = await fetch('http://localhost:8000/api/persons', { headers });
+        const personsData = await personsRes.json();
+        const persons = personsData.data || [];
+        const activeCases = persons.filter(p => p.status === 'missing').length;
+        const foundCases = persons.filter(p => p.status === 'found').length;
+
+        // Fetch cameras
+        const camerasRes = await fetch('http://localhost:8000/api/cameras', { headers });
+        const camerasData = await camerasRes.json();
+        const cameraCount = camerasData.data ? camerasData.data.length : 0;
+
+        // Fetch detection results
+        const resultsRes = await fetch('http://localhost:8000/api/results', { headers });
+        const resultsData = await resultsRes.json();
+        const alertsCount = resultsData.data ? resultsData.data.length : 0;
+
+        setStats([
+          { label: 'Cases Active', value: activeCases.toString(), trend: 'Live', trendUp: true },
+          { label: 'Persons Found', value: foundCases.toString(), trend: 'Live', trendUp: true },
+          { label: 'CCTV Sources', value: cameraCount.toString(), trend: 'Live', trendUp: true },
+          { label: 'Alerts Total', value: alertsCount.toString(), trend: 'Live', trendUp: true },
+        ]);
+      } catch (err) {
+        console.error("Failed to fetch dashboard stats:", err);
+      }
+    };
+
+    fetchDashboardStats();
+    const interval = setInterval(fetchDashboardStats, 10000);
+    return () => clearInterval(interval);
+  }, []);
 
   const features = [
     {
@@ -86,12 +134,7 @@ export default function DashboardPage() {
     },
   ];
 
-  const stats = [
-    { label: 'Cases Active', value: '24', trend: '+3', trendUp: true },
-    { label: 'Persons Found', value: '156', trend: '+12', trendUp: true },
-    { label: 'CCTV Sources', value: '48', trend: '+5', trendUp: true },
-    { label: 'Alerts Today', value: '7', trend: '-2', trendUp: false },
-  ];
+  // Removed static hardcoded stats
 
   return (
     <div className="dashboard-page" id="dashboard-page">
@@ -100,12 +143,12 @@ export default function DashboardPage() {
         {/* Hero Section */}
         <section className="dashboard-hero" id="dashboard-hero">
           <div className="hero-content">
-            <div className="hero-badge">🛡 Control Center</div>
+            <div className="hero-badge"> Control Center</div>
             <h1 className="hero-title">
               Welcome back, <span className="text-gradient">{user?.name || 'Admin'}</span>
             </h1>
             <p className="hero-subtitle">
-              Monitor surveillance feeds, manage missing person records, and review AI detection results from a single command center.
+              Monitor surveillance feeds, manage missing person records.
             </p>
           </div>
           <div className="hero-visual">

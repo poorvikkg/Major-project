@@ -4,12 +4,12 @@ import Navbar from '../components/Navbar';
 import { useAuth } from '../context/AuthContext';
 
 const SECTIONS = [
-  { id: 'personal',    label: 'Personal Details',       icon: '👤' },
-  { id: 'physical',   label: 'Physical Identification', icon: '🔍' },
-  { id: 'lastseen',   label: 'Last Seen Details',       icon: '📍' },
-  { id: 'additional', label: 'Additional Info',         icon: '📋' },
-  { id: 'complainant',label: 'Complainant Details',     icon: '📞' },
-  { id: 'images',     label: 'Photographs',             icon: '📷' },
+  { id: 'personal',    label: 'Personal Details',       icon: '' },
+  { id: 'physical',   label: 'Physical Identification', icon: '' },
+  { id: 'lastseen',   label: 'Last Seen Details',       icon: '' },
+  { id: 'additional', label: 'Additional Info',         icon: '' },
+  { id: 'complainant',label: 'Complainant Details',     icon: '' },
+  { id: 'images',     label: 'Photographs',             icon: '' },
 ];
 
 const BLOOD_GROUPS = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-', 'Unknown'];
@@ -202,38 +202,6 @@ export default function AddPersonPage() {
   const goPrev = () => setActiveSection(SECTIONS[Math.max(sectionIdx - 1, 0)].id);
 
 
-  const Input = ({ name, type = 'text', placeholder, required, ...rest }) => (
-    <input
-      type={type} name={name} id={name}
-      className={`form-input${errors[name] ? ' error' : ''}`}
-      placeholder={placeholder}
-      value={formData[name]}
-      onChange={handleChange}
-      required={required}
-      {...rest}
-    />
-  );
-
-  const Select = ({ name, required, children }) => (
-    <select
-      name={name} id={name}
-      className={`form-input form-select${errors[name] ? ' error' : ''}`}
-      value={formData[name]}
-      onChange={handleChange}
-      required={required}
-    >{children}</select>
-  );
-
-  const Textarea = ({ name, placeholder, rows = 3 }) => (
-    <textarea
-      name={name} id={name}
-      className="form-input form-textarea"
-      placeholder={placeholder}
-      value={formData[name]}
-      onChange={handleChange}
-      rows={rows}
-    />
-  );
 
   return (
     <div className="ap-page" id="add-person-page">
@@ -259,13 +227,13 @@ export default function AddPersonPage() {
         {/* Alerts */}
         {submitSuccess && (
           <div className="alert alert-success fade-in">
-            <span className="alert-icon">✓</span>
+            <span className="alert-icon"></span>
             Record created successfully! Redirecting to persons list…
           </div>
         )}
         {submitError && (
           <div className="alert alert-error">
-            <span className="alert-icon">⚠</span>
+            <span className="alert-icon"></span>
             {submitError}
           </div>
         )}
@@ -303,7 +271,7 @@ export default function AddPersonPage() {
             {/* ── A. Personal Details ──────────────────────────────── */}
             {activeSection === 'personal' && (
               <div className="ap-section" id="section-personal">
-                <h2 className="ap-section-title"><span>👤</span> Personal Details</h2>
+                <h2 className="ap-section-title"><span></span> Personal Details</h2>
                 <div className="ap-grid-3">
                   <Field errors={errors} label="Full Name" name="name" required>
                     <Input formData={formData} handleChange={handleChange} errors={errors} name="name" placeholder="Enter full legal name" required />
@@ -359,7 +327,7 @@ export default function AddPersonPage() {
             {/* ── B. Physical Identification ───────────────────────── */}
             {activeSection === 'physical' && (
               <div className="ap-section" id="section-physical">
-                <h2 className="ap-section-title"><span>🔍</span> Physical Identification</h2>
+                <h2 className="ap-section-title"><span></span> Physical Identification</h2>
                 <div className="ap-grid-3">
                   <Field errors={errors} label="Face Shape" name="face_shape">
                     <Select formData={formData} handleChange={handleChange} errors={errors} name="face_shape">
@@ -412,7 +380,7 @@ export default function AddPersonPage() {
             {/* ── C. Last Seen Details ─────────────────────────────── */}
             {activeSection === 'lastseen' && (
               <div className="ap-section" id="section-lastseen">
-                <h2 className="ap-section-title"><span>📍</span> Last Seen Details</h2>
+                <h2 className="ap-section-title"><span></span> Last Seen Details</h2>
                 <Field errors={errors} label="Last Seen Location" name="last_seen_location" required>
                   <Textarea formData={formData} handleChange={handleChange} name="last_seen_location" placeholder="Full address or description of where the person was last seen..." rows={2} />
                   {errors.last_seen_location && <span className="ap-error">{errors.last_seen_location}</span>}
@@ -442,7 +410,7 @@ export default function AddPersonPage() {
             {/* ── D. Additional Information ────────────────────────── */}
             {activeSection === 'additional' && (
               <div className="ap-section" id="section-additional">
-                <h2 className="ap-section-title"><span>📋</span> Additional Information</h2>
+                <h2 className="ap-section-title"><span></span> Additional Information</h2>
                 <div className="ap-grid-2">
                   <Field errors={errors} label="Occupation" name="occupation">
                     <Input formData={formData} handleChange={handleChange} errors={errors} name="occupation" placeholder="e.g. Student, Farmer, Engineer" />
@@ -469,7 +437,7 @@ export default function AddPersonPage() {
             {/* ── E. Complainant Details ───────────────────────────── */}
             {activeSection === 'complainant' && (
               <div className="ap-section" id="section-complainant">
-                <h2 className="ap-section-title"><span>📞</span> Complainant Details</h2>
+                <h2 className="ap-section-title"><span></span> Complainant Details</h2>
                 <p className="ap-section-hint">Information about the person filing this report.</p>
                 <div className="ap-grid-2">
                   <Field errors={errors} label="Full Name" name="complainant_name" required>
@@ -501,12 +469,12 @@ export default function AddPersonPage() {
             {/* ── F. Photographs ───────────────────────────────────── */}
             {activeSection === 'images' && (
               <div className="ap-section" id="section-images">
-                <h2 className="ap-section-title"><span>📷</span> Photographs</h2>
+                <h2 className="ap-section-title"><span></span> Photographs</h2>
                 <p className="ap-section-hint">Upload 1–10 clear face photographs. Multiple images improve face recognition accuracy.</p>
 
                 {errors.photos && (
                   <div className="alert alert-error" style={{marginBottom:'1rem'}}>
-                    <span className="alert-icon">⚠</span>{errors.photos}
+                    <span className="alert-icon"></span>{errors.photos}
                   </div>
                 )}
 
@@ -547,7 +515,7 @@ export default function AddPersonPage() {
                             onClick={() => removePhoto(i)}
                             title="Remove photo"
                             id={`remove-photo-${i}`}
-                          >✕</button>
+                          ></button>
                         </div>
                         <span className="ap-thumb-num">{i + 1}</span>
                       </div>
@@ -590,7 +558,7 @@ export default function AddPersonPage() {
                 >
                   {isSubmitting
                     ? <><span className="btn-loader" /> Submitting…</>
-                    : '🗂 Submit Report'}
+                    : ' Submit Report'}
                 </button>
               )}
             </div>
