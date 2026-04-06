@@ -1,0 +1,719 @@
+﻿..\.venv\Scripts\python
+.exe : WARNING: All 
+log messages before 
+absl::InitializeLog() 
+is called are written 
+to STDERR
+At line:1 char:1
++ ..\.venv\Scripts\pyth
+on.exe -m uvicorn 
+app.main:app > 
+test_run.log 2> ...
++ ~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~
+    + CategoryInfo     
+         : 
+NotSpecified: (W    
+ARNING: All lo...itte  
+  n to STDERR:String) 
+[    ], RemoteException
+    + 
+FullyQualifiedError    
+Id : NativeCommandErr  
+  or
+ 
+I0000 00:00:1775467686.
+488337   28880 
+port.cc:153] oneDNN 
+custom operations are 
+on. You may see 
+slightly different 
+numerical results due 
+to floating-point 
+round-off errors from 
+different computation 
+orders. To turn them 
+off, set the 
+environment variable `T
+F_ENABLE_ONEDNN_OPTS=0`
+.
+WARNING: All log 
+messages before 
+absl::InitializeLog() 
+is called are written 
+to STDERR
+I0000 00:00:1775467689.
+728386   28880 
+port.cc:153] oneDNN 
+custom operations are 
+on. You may see 
+slightly different 
+numerical results due 
+to floating-point 
+round-off errors from 
+different computation 
+orders. To turn them 
+off, set the 
+environment variable `T
+F_ENABLE_ONEDNN_OPTS=0`
+.
+WARNING:tensorflow:From
+ C:\Users\Lenovo\major_
+project\.venv\Lib\site-
+packages\tf_keras\src\l
+osses.py:2976: The 
+name tf.losses.sparse_s
+oftmax_cross_entropy 
+is deprecated. Please 
+use tf.compat.v1.losses
+.sparse_softmax_cross_e
+ntropy instead.
+
+[ArcFaceEmbedder] 
+insightface 
+unavailable: No module 
+named 'insightface'
+[ArcFaceEmbedder] 
+insightface 
+unavailable: No module 
+named 'insightface'
+INFO:     Started 
+server process [13984]
+INFO:     Waiting for 
+application startup.
+ERROR:    Traceback 
+(most recent call 
+last):
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\sqlalch
+emy\engine\base.py", 
+line 143, in __init__
+    
+self._dbapi_connection 
+= 
+engine.raw_connection()
+                       
+      
+~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\sqlalch
+emy\engine\base.py", 
+line 3317, in 
+raw_connection
+    return 
+self.pool.connect()
+           
+~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\sqlalch
+emy\pool\base.py", 
+line 448, in connect
+    return _ConnectionF
+airy._checkout(self)
+           ~~~~~~~~~~~~
+~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\sqlalch
+emy\pool\base.py", 
+line 1272, in _checkout
+    fairy = _Connection
+Record.checkout(pool)
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\sqlalch
+emy\pool\base.py", 
+line 712, in checkout
+    rec = 
+pool._do_get()
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\sqlalch
+emy\pool\impl.py", 
+line 177, in _do_get
+    with 
+util.safe_reraise():
+         
+~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\sqlalch
+emy\util\langhelpers.py
+", line 121, in 
+__exit__
+    raise exc_value.wit
+h_traceback(exc_tb)
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\sqlalch
+emy\pool\impl.py", 
+line 175, in _do_get
+    return self._create
+_connection()
+           ~~~~~~~~~~~~
+~~~~~~~~~~~^^
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\sqlalch
+emy\pool\base.py", 
+line 389, in 
+_create_connection
+    return 
+_ConnectionRecord(self)
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\sqlalch
+emy\pool\base.py", 
+line 674, in __init__
+    self.__connect()
+    ~~~~~~~~~~~~~~^^
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\sqlalch
+emy\pool\base.py", 
+line 900, in __connect
+    with 
+util.safe_reraise():
+         
+~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\sqlalch
+emy\util\langhelpers.py
+", line 121, in 
+__exit__
+    raise exc_value.wit
+h_traceback(exc_tb)
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\sqlalch
+emy\pool\base.py", 
+line 896, in __connect
+    
+self.dbapi_connection 
+= connection = pool._in
+voke_creator(self)
+                       
+                  ~~~~~
+~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\sqlalch
+emy\engine\create.py", 
+line 667, in connect
+    return dialect.conn
+ect(*cargs_tup, 
+**cparams)
+           ~~~~~~~~~~~~
+~~~^^^^^^^^^^^^^^^^^^^^
+^^^
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\sqlalch
+emy\engine\default.py",
+ line 630, in connect
+    return self.loaded_
+dbapi.connect(*cargs, 
+**cparams)  # type: 
+ignore[no-any-return]  
+# NOQA: E501
+           ~~~~~~~~~~~~
+~~~~~~~~~~~~~^^^^^^^^^^
+^^^^^^^^^
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\psycopg
+2\__init__.py", line 
+135, in connect
+    conn = 
+_connect(dsn, connectio
+n_factory=connection_fa
+ctory, **kwasync)
+psycopg2.OperationalErr
+or: connection to 
+server at "127.0.0.1", 
+port 5433 failed: 
+Connection refused 
+(0x0000274D/10061)
+	Is the server running 
+on that host and 
+accepting TCP/IP 
+connections?
+
+
+The above exception 
+was the direct cause 
+of the following 
+exception:
+
+Traceback (most recent 
+call last):
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\starlet
+te\routing.py", line 
+638, in lifespan
+    async with self.lif
+espan_context(app) as 
+maybe_state:
+               ~~~~~~~~
+~~~~~~~~~~~~~^^^^^
+  File "C:\Users\Lenovo
+\AppData\Local\Programs
+\Python\Python313\Lib\c
+ontextlib.py", line 
+214, in __aenter__
+    return await 
+anext(self.gen)
+           
+^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\fastapi
+\routing.py", line 
+216, in merged_lifespan
+    async with 
+original_context(app) 
+as 
+maybe_original_state:
+               
+~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\Lenovo
+\AppData\Local\Programs
+\Python\Python313\Lib\c
+ontextlib.py", line 
+214, in __aenter__
+    return await 
+anext(self.gen)
+           
+^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\fastapi
+\routing.py", line 
+216, in merged_lifespan
+    async with 
+original_context(app) 
+as 
+maybe_original_state:
+               
+~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\Lenovo
+\AppData\Local\Programs
+\Python\Python313\Lib\c
+ontextlib.py", line 
+214, in __aenter__
+    return await 
+anext(self.gen)
+           
+^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\fastapi
+\routing.py", line 
+216, in merged_lifespan
+    async with 
+original_context(app) 
+as 
+maybe_original_state:
+               
+~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\Lenovo
+\AppData\Local\Programs
+\Python\Python313\Lib\c
+ontextlib.py", line 
+214, in __aenter__
+    return await 
+anext(self.gen)
+           
+^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\fastapi
+\routing.py", line 
+216, in merged_lifespan
+    async with 
+original_context(app) 
+as 
+maybe_original_state:
+               
+~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\Lenovo
+\AppData\Local\Programs
+\Python\Python313\Lib\c
+ontextlib.py", line 
+214, in __aenter__
+    return await 
+anext(self.gen)
+           
+^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\fastapi
+\routing.py", line 
+216, in merged_lifespan
+    async with 
+original_context(app) 
+as 
+maybe_original_state:
+               
+~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\Lenovo
+\AppData\Local\Programs
+\Python\Python313\Lib\c
+ontextlib.py", line 
+214, in __aenter__
+    return await 
+anext(self.gen)
+           
+^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\fastapi
+\routing.py", line 
+216, in merged_lifespan
+    async with 
+original_context(app) 
+as 
+maybe_original_state:
+               
+~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\Lenovo
+\AppData\Local\Programs
+\Python\Python313\Lib\c
+ontextlib.py", line 
+214, in __aenter__
+    return await 
+anext(self.gen)
+           
+^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\fastapi
+\routing.py", line 
+216, in merged_lifespan
+    async with 
+original_context(app) 
+as 
+maybe_original_state:
+               
+~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\Lenovo
+\AppData\Local\Programs
+\Python\Python313\Lib\c
+ontextlib.py", line 
+214, in __aenter__
+    return await 
+anext(self.gen)
+           
+^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\fastapi
+\routing.py", line 
+216, in merged_lifespan
+    async with 
+original_context(app) 
+as 
+maybe_original_state:
+               
+~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\Lenovo
+\AppData\Local\Programs
+\Python\Python313\Lib\c
+ontextlib.py", line 
+214, in __aenter__
+    return await 
+anext(self.gen)
+           
+^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\fastapi
+\routing.py", line 
+216, in merged_lifespan
+    async with 
+original_context(app) 
+as 
+maybe_original_state:
+               
+~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\Lenovo
+\AppData\Local\Programs
+\Python\Python313\Lib\c
+ontextlib.py", line 
+214, in __aenter__
+    return await 
+anext(self.gen)
+           
+^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Lenovo
+\major_project\backend\
+app\main.py", line 30, 
+in lifespan
+    init_db()
+    ~~~~~~~^^
+  File "C:\Users\Lenovo
+\major_project\backend\
+app\database\operations
+.py", line 14, in 
+init_db
+    Base.metadata.creat
+e_all(bind=engine)
+    ~~~~~~~~~~~~~~~~~~~
+~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\sqlalch
+emy\sql\schema.py", 
+line 5928, in 
+create_all
+    
+bind._run_ddl_visitor(
+    
+~~~~~~~~~~~~~~~~~~~~~^
+        
+ddl.SchemaGenerator, 
+self, 
+checkfirst=checkfirst, 
+tables=tables
+        ^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^
+^^
+    )
+    ^
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\sqlalch
+emy\engine\base.py", 
+line 3267, in 
+_run_ddl_visitor
+    with self.begin() 
+as conn:
+         ~~~~~~~~~~^^
+  File "C:\Users\Lenovo
+\AppData\Local\Programs
+\Python\Python313\Lib\c
+ontextlib.py", line 
+141, in __enter__
+    return 
+next(self.gen)
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\sqlalch
+emy\engine\base.py", 
+line 3257, in begin
+    with 
+self.connect() as conn:
+         ~~~~~~~~~~~~^^
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\sqlalch
+emy\engine\base.py", 
+line 3293, in connect
+    return self._connec
+tion_cls(self)
+           ~~~~~~~~~~~~
+~~~~~~~~^^^^^^
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\sqlalch
+emy\engine\base.py", 
+line 145, in __init__
+    Connection._handle_
+dbapi_exception_noconne
+ction(
+    ~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~^
+        err, dialect, 
+engine
+        
+^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\sqlalch
+emy\engine\base.py", 
+line 2448, in _handle_d
+bapi_exception_noconnec
+tion
+    raise sqlalchemy_ex
+ception.with_traceback(
+exc_info[2]) from e
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\sqlalch
+emy\engine\base.py", 
+line 143, in __init__
+    
+self._dbapi_connection 
+= 
+engine.raw_connection()
+                       
+      
+~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\sqlalch
+emy\engine\base.py", 
+line 3317, in 
+raw_connection
+    return 
+self.pool.connect()
+[+] FaceEncoder: DeepFace/Facenet loaded
+           
+~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\sqlalch
+emy\pool\base.py", 
+line 448, in connect
+    return _ConnectionF
+airy._checkout(self)
+           ~~~~~~~~~~~~
+~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\sqlalch
+emy\pool\base.py", 
+line 1272, in _checkout
+    fairy = _Connection
+Record.checkout(pool)
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\sqlalch
+emy\pool\base.py", 
+line 712, in checkout
+    rec = 
+pool._do_get()
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\sqlalch
+emy\pool\impl.py", 
+line 177, in _do_get
+    with 
+util.safe_reraise():
+         
+~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\sqlalch
+emy\util\langhelpers.py
+", line 121, in 
+__exit__
+    raise exc_value.wit
+h_traceback(exc_tb)
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\sqlalch
+emy\pool\impl.py", 
+line 175, in _do_get
+    return self._create
+_connection()
+           ~~~~~~~~~~~~
+~~~~~~~~~~~^^
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\sqlalch
+emy\pool\base.py", 
+line 389, in 
+_create_connection
+    return 
+_ConnectionRecord(self)
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\sqlalch
+emy\pool\base.py", 
+line 674, in __init__
+    self.__connect()
+    ~~~~~~~~~~~~~~^^
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\sqlalch
+emy\pool\base.py", 
+line 900, in __connect
+    with 
+util.safe_reraise():
+         
+~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\sqlalch
+emy\util\langhelpers.py
+", line 121, in 
+__exit__
+    raise exc_value.wit
+h_traceback(exc_tb)
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\sqlalch
+emy\pool\base.py", 
+line 896, in __connect
+    
+self.dbapi_connection 
+= connection = pool._in
+voke_creator(self)
+                       
+                  ~~~~~
+~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\sqlalch
+emy\engine\create.py", 
+line 667, in connect
+    return dialect.conn
+ect(*cargs_tup, 
+**cparams)
+           ~~~~~~~~~~~~
+~~~^^^^^^^^^^^^^^^^^^^^
+^^^
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\sqlalch
+emy\engine\default.py",
+ line 630, in connect
+    return self.loaded_
+dbapi.connect(*cargs, 
+**cparams)  # type: 
+ignore[no-any-return]  
+# NOQA: E501
+           ~~~~~~~~~~~~
+~~~~~~~~~~~~~^^^^^^^^^^
+^^^^^^^^^
+  File "C:\Users\Lenovo
+\major_project\.venv\Li
+b\site-packages\psycopg
+2\__init__.py", line 
+135, in connect
+    conn = 
+_connect(dsn, connectio
+n_factory=connection_fa
+ctory, **kwasync)
+sqlalchemy.exc.Operatio
+nalError: (psycopg2.Ope
+rationalError) 
+connection to server 
+at "127.0.0.1", port 
+5433 failed: 
+Connection refused 
+(0x0000274D/10061)
+	Is the server running 
+on that host and 
+accepting TCP/IP 
+connections?
+
+(Background on this 
+error at: https://sqlal
+che.me/e/20/e3q8)
+
+ERROR:    Application 
+startup failed. 
+Exiting.

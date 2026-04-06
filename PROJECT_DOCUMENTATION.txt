@@ -1,0 +1,148 @@
+# Project Documentation: Missing Person Detection System (MPDS)
+
+## 1. Executive Summary
+The **Missing Person Detection System (MPDS)** is an AI-powered surveillance and identification platform designed to assist law enforcement and search agencies in locating missing individuals. By integrating real-time CCTV monitoring with state-of-the-art face recognition technology, the system can automatically detect and identify registered missing persons across diverse environments.
+
+Key capabilities include:
+- **FIR-level Registration**: Comprehensive data capture for missing person cases, including multiple photographs and complainant details.
+- **Real-time Surveillance**: Live RTSP stream analysis with dynamic face detection and identification overlays.
+- **Historical Analysis**: Uploading and processing legacy video footage to find sightings.
+- **Automated Alerts**: Logging of detections with GPS coordinates, timestamps, and confidence scores.
+
+---
+
+## 2. System Architecture
+The MPDS follows a modern, decoupled **Classic Three-Tier Architecture**:
+
+### 2.0 System Flow Diagram
+```mermaid
+graph TD
+    A[CCTV Camera / Video] -->|RTSP Stream / Upload| B[Backend Engine]
+    B -->|Face Detection| C{RetinaFace}
+    C -->|Detected Face| D[Face Embedder]
+    D -->|512-d Embedding| E[FAISS Search]
+    E -->|Similarity Match| F{Is Match?}
+    F -->|Yes| G[Log Sighting & Notify]
+    F -->|No| H[Next Frame]
+    G --> I[PostgreSQL DB]
+    I --> J[Frontend Dashboard]
+```
+
+### 2.1 Backend (Python / FastAPI)
+The core logic resides in a high-performance FastAPI server. It manages:
+- **API Orchestration**: Handling requests from the frontend.
+- **Security**: JWT-based authentication and role-based access control.
+- **ML Pipeline**: Managing face detection, embedding generation, and vector search.
+- **Storage**: Interfacing with PostgreSQL (relational) and local filesystem (blob storage for images/videos).
+
+### 2.2 Frontend (React / Vite)
+A professional, responsive dashboard built with React. Features include:
+- **Live Monitoring Dashboard**: Real-time video canvas with SVG bbox overlays.
+- **Case Management**: Forms for registering missing persons and viewing sighting history.
+- **Results & Analytics**: Visualizing detection logs and search results.
+
+### 2.3 Database Layer (PostgreSQL & FAISS)
+- **PostgreSQL**: Stores metadata, user accounts, camera configurations, and detection logs.
+- **FAISS (Facebook AI Similarity Search)**: An in-memory vector database for extremely fast (sub-millisecond) similarity searching of 512-dimensional face embeddings.
+
+---
+
+## 3. Technology Stack
+| Component | Technology | Description |
+| :--- | :--- | :--- |
+| **Backend** | Python 3.10+, FastAPI | High-performance asynchronous API framework. |
+| **Frontend** | React, Vite, Vanilla CSS | Fast, modern UI with 60fps interaction. |
+| **Database** | PostgreSQL | Robust relational data storage. |
+| **Vector Search**| FAISS | Efficient similarity search for face embeddings. |
+| **Face Detection** | RetinaFace / OpenCV | High-accuracy face localization in complex frames. |
+| **Face Recognition**| ArcFace (InsightFace) | 512-d feature extraction for robust identification. |
+| **Communication** | REST API, RTSP | Standards for data exchange and video streaming. |
+| **Containerization**| Docker, Docker Compose | Consistent environment deployment. |
+
+---
+
+## 4. AI/ML Pipeline Details
+The system utilizes a multi-stage pipeline for processing visual data:
+
+### 4.1 Face Detection
+The system employs **RetinaFace** (or OpenCV as a fallback) to locate faces within a frame. It returns bounding box coordinates and facial landmarks for alignment.
+
+### 4.2 Face Alignment & Pre-processing
+Detected faces are cropped and aligned (normalized) to a 112×112 pixel RGB image. This step is critical for ensuring that the face recognition model receives consistent inputs regardless of head tilt or rotation.
+
+### 4.3 Feature Extraction (Embedding)
+The **ArcFace** model converts the aligned face crop into a **512-dimensional mathematical vector** (embedding). 
+- If two images are of the same person, their embeddings will be close together in hyperspace.
+- MPDS uses **L2-normalization** to ensure better similarity comparison.
+
+### 4.4 Similarity Matching (FAISS)
+Instead of comparing a face against every record in a traditional database (which is slow), MPDS uses **FAISS (IndexFlatIP)**.
+- It calculates the **Cosine Similarity** between the target face and the entire database of missing persons in parallel.
+- Matches exceeding the defined `MATCH_THRESHOLD` (default: 0.65) are flagged as positive detections.
+
+---
+
+## 5. Database Schema (Key Entities)
+
+### 5.1 `missing_persons`
+- **id**: UUID (Primary Key)
+- **name**: String
+- **age, gender, description**: Metadata
+- **fir_number**: Primary identifier for legal cases.
+- **photos**: List of image paths.
+- **embeddings**: Binary representation of the 512-d vectors.
+
+### 5.2 `detection_logs`
+- **person_id**: Reference to the missing person.
+- **camera_id**: Source of the sighting.
+- **timestamp**: ISO 8601.
+- **confidence**: Score (0.0 to 1.0).
+- **location_snapshot**: Path to the frame where they were seen.
+
+### 5.3 `cameras`
+- **name, location**: Human-readable identifiers.
+- **rtsp_url**: The stream source address.
+
+---
+
+## 6. Frontend Pages Overview
+1. **Login**: Secure entry point for authorized personnel only.
+2. **Dashboard**: High-level summary of active cases, total cameras online, and recent sightings.
+3. **Register Missing Person**: A detailed multi-step form to upload multiple photos and capture FIR details.
+4. **Live Monitoring**: A multi-camera view that highlights people's faces and matches them against the database in real-time.
+5. **Video Upload**: Batch processing of recorded footage (e.g., from a DVR) to find specific individuals.
+6. **Person Detail**: A 360-degree view of a case, including a map of all recorded sightings.
+
+---
+
+## 7. Key API Endpoints
+| Endpoint | Method | Description |
+| :--- | :--- | :--- |
+| `/auth/login` | POST | Authenticates user and returns JWT token. |
+| `/persons/` | POST | Register a new missing person with image embeddings. |
+| `/persons/{id}` | GET | Fetch full details and sighting history for a person. |
+| `/stream/process` | POST | Start real-time analysis on a specific RTSP stream. |
+| `/rtsp/overlay/{id}` | GET | Returns a mjpeg stream with face detection boxes overlaid. |
+| `/detection/logs` | GET | Retrieve a paginated list of all sightings across the system. |
+
+---
+
+## 8. Setup & Installation
+1. **Prerequisites**: Docker & Docker Compose installed.
+2. **Environment**: Create a `.env` file with DB credentials.
+3. **Deployment**:
+   ```powershell
+   # Start the entire stack
+   docker-compose up --build
+   ```
+4. **Access**:
+   - Frontend: `http://localhost:5173`
+   - Backend API Docs: `http://localhost:8000/docs`
+
+---
+
+## 9. Future Enhancements
+- **Geo-fencing**: Triggering mobile alerts when a person is spotted within a specific zone.
+- **Clothing/Attribute Recognition**: Identifying people based on color of clothing or accessories when faces are obscured.
+- **Crowd Density Integration**: Correlating missing person sightings with crowd dynamics.
+- **Mobile App**: A dedicated app for field officers to receive push notifications of sightings.

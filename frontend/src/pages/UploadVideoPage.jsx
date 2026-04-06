@@ -113,10 +113,40 @@ export default function UploadVideoPage() {
         throw new Error(detectionData.message || 'Detection failed');
       }
 
-      setUploadProgress(100);
-      setIsUploading(false);
-      setUploadComplete(true);
-      setStatusMessage(`${detectionData.message}`);
+      setUploadProgress(75);
+      setStatusMessage('Analyzing Video in Background...');
+
+      // Keep polling active-tasks until the background job is fully finished
+      const taskId = detectionData.data.task_id;
+      
+      const checkTaskStatus = async () => {
+        try {
+          const tasksRes = await fetch('http://localhost:8000/api/active-tasks', {
+            headers: { 'Authorization': `Bearer ${user?.token}` }
+          });
+          if (!tasksRes.ok) throw new Error('Polling error');
+          const tasksData = await tasksRes.json();
+          const activeList = tasksData.data || [];
+          
+          if (activeList.some(t => t.id === taskId)) {
+            // Task still running, wait and check again
+            setTimeout(checkTaskStatus, 2000);
+          } else {
+            // Task is gone -> Processing Complete!
+            setUploadProgress(100);
+            setIsUploading(false);
+            setUploadComplete(true);
+            setStatusMessage('Backend Analysis Complete! Check your Dashboard for results.');
+          }
+        } catch (e) {
+            // Only retry once or twice normally, but we will just keep polling slowly
+            setTimeout(checkTaskStatus, 3000);
+        }
+      };
+
+      // Start polling
+      checkTaskStatus();
+
     } catch (err) {
       setIsUploading(false);
       setError(err.message || 'An error occurred during processing');

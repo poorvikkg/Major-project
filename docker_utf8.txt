@@ -1,0 +1,6 @@
+﻿CONTAINER ID   IMAGE                COMMAND                  CREATED          STATUS                     PORTS     NAMES
+4d0c42ae5d9c   postgres:16-alpine   "docker-entrypoint.sΓÇª"   10 minutes ago   Created                              70066f930539_Major_project_DB
+d76b7456d62b   postgres             "docker-entrypoint.sΓÇª"   2 days ago       Exited (0) 6 minutes ago             Major_project_DB
+e16120bb33a4   postgres:15          "docker-entrypoint.sΓÇª"   5 weeks ago      Created                              wallet_postgres
+0e3fe533d66d   redis                "docker-entrypoint.sΓÇª"   6 weeks ago      Exited (0) 5 weeks ago               wallet-redis
+cf0c7632cffd   postgres:15          "docker-entrypoint.sΓÇª"   7 weeks ago      Exited (0) 5 weeks ago               wallet-postgres

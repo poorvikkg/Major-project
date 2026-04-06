@@ -1,0 +1,9 @@
+docker-compose up -d
+.\.venv\Scripts\activate
+cd backend
+uvicorn app.main:app --reload --port 8000
+
+
+next frontend
+cd frontend
+npm run dev

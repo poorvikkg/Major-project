@@ -1,0 +1,295 @@
+﻿..\.venv\Scripts\python.ex
+e : WARNING: All log 
+messages before 
+absl::InitializeLog() is 
+called are written to 
+STDERR
+At line:1 char:1
++ ..\.venv\Scripts\python.
+exe -m uvicorn 
+app.main:app > 
+startup_error.l ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo        
+      : NotSpecified: (W  
+  ARNING: All lo...itte   
+ n to STDERR:String) [    
+], RemoteException
+    + FullyQualifiedError 
+   Id : NativeCommandErr  
+  or
+ 
+I0000 
+00:00:1775023633.365964   
+30484 port.cc:153] oneDNN 
+custom operations are on. 
+You may see slightly 
+different numerical 
+results due to 
+floating-point round-off 
+errors from different 
+computation orders. To 
+turn them off, set the 
+environment variable 
+`TF_ENABLE_ONEDNN_OPTS=0`.
+WARNING: All log messages 
+before 
+absl::InitializeLog() is 
+called are written to 
+STDERR
+I0000 
+00:00:1775023641.138685   
+30484 port.cc:153] oneDNN 
+custom operations are on. 
+You may see slightly 
+different numerical 
+results due to 
+floating-point round-off 
+errors from different 
+computation orders. To 
+turn them off, set the 
+environment variable 
+`TF_ENABLE_ONEDNN_OPTS=0`.
+WARNING:tensorflow:From C:
+\Users\Lenovo\major_projec
+t\.venv\Lib\site-packages\
+tf_keras\src\losses.py:297
+6: The name tf.losses.spar
+se_softmax_cross_entropy 
+is deprecated. Please use 
+tf.compat.v1.losses.sparse
+_softmax_cross_entropy 
+instead.
+
+Traceback (most recent 
+call last):
+  File "<frozen runpy>", 
+line 198, in 
+_run_module_as_main
+  File "<frozen runpy>", 
+line 88, in _run_code
+  File "C:\Users\Lenovo\ma
+jor_project\.venv\Lib\site
+-packages\uvicorn\__main__
+.py", line 4, in <module>
+    uvicorn.main()
+    ~~~~~~~~~~~~^^
+  File "C:\Users\Lenovo\ma
+jor_project\.venv\Lib\site
+-packages\click\core.py", 
+line 1485, in __call__
+    return 
+self.main(*args, **kwargs)
+           
+~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Lenovo\ma
+jor_project\.venv\Lib\site
+-packages\click\core.py", 
+line 1406, in main
+    rv = self.invoke(ctx)
+  File "C:\Users\Lenovo\ma
+jor_project\.venv\Lib\site
+-packages\click\core.py", 
+line 1269, in invoke
+    return 
+ctx.invoke(self.callback, 
+**ctx.params)
+           ~~~~~~~~~~^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Lenovo\ma
+jor_project\.venv\Lib\site
+-packages\click\core.py", 
+line 824, in invoke
+    return 
+callback(*args, **kwargs)
+  File "C:\Users\Lenovo\ma
+jor_project\.venv\Lib\site
+-packages\uvicorn\main.py"
+, line 433, in main
+    run(
+    ~~~^
+        app,
+        ^^^^
+    ...<47 lines>...
+        h11_max_incomplete
+_event_size=h11_max_incomp
+lete_event_size,
+        ^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Lenovo\ma
+jor_project\.venv\Lib\site
+-packages\uvicorn\main.py"
+, line 606, in run
+    server.run()
+    ~~~~~~~~~~^^
+  File "C:\Users\Lenovo\ma
+jor_project\.venv\Lib\site
+-packages\uvicorn\server.p
+y", line 75, in run
+    return asyncio_run(sel
+f.serve(sockets=sockets), 
+loop_factory=self.config.g
+et_loop_factory())
+  File "C:\Users\Lenovo\Ap
+pData\Local\Programs\Pytho
+n\Python313\Lib\asyncio\ru
+nners.py", line 195, in 
+run
+    return 
+runner.run(main)
+           
+~~~~~~~~~~^^^^^^
+  File "C:\Users\Lenovo\Ap
+pData\Local\Programs\Pytho
+n\Python313\Lib\asyncio\ru
+nners.py", line 118, in 
+run
+    return self._loop.run_
+until_complete(task)
+           ~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\Lenovo\Ap
+pData\Local\Programs\Pytho
+n\Python313\Lib\asyncio\ba
+se_events.py", line 725, 
+in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "C:\Users\Lenovo\ma
+jor_project\.venv\Lib\site
+-packages\uvicorn\server.p
+y", line 79, in serve
+    await 
+self._serve(sockets)
+  File "C:\Users\Lenovo\ma
+jor_project\.venv\Lib\site
+-packages\uvicorn\server.p
+y", line 86, in _serve
+    config.load()
+    ~~~~~~~~~~~^^
+  File "C:\Users\Lenovo\ma
+jor_project\.venv\Lib\site
+-packages\uvicorn\config.p
+y", line 441, in load
+    self.loaded_app = impo
+rt_from_string(self.app)
+                      ~~~~
+~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\Lenovo\ma
+jor_project\.venv\Lib\site
+-packages\uvicorn\importer
+.py", line 19, in 
+import_from_string
+    module = importlib.imp
+ort_module(module_str)
+  File "C:\Users\Lenovo\Ap
+pData\Local\Programs\Pytho
+n\Python313\Lib\importlib\
+__init__.py", line 88, in 
+import_module
+    return _bootstrap._gcd
+_import(name[level:], 
+package, level)
+           ~~~~~~~~~~~~~~~
+~~~~~~~^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^
+  File "<frozen 
+importlib._bootstrap>", 
+line 1387, in _gcd_import
+  File "<frozen 
+importlib._bootstrap>", 
+line 1360, in 
+_find_and_load
+  File "<frozen 
+importlib._bootstrap>", 
+line 1331, in 
+_find_and_load_unlocked
+  File "<frozen 
+importlib._bootstrap>", 
+line 935, in 
+_load_unlocked
+  File "<frozen importlib.
+_bootstrap_external>", 
+line 1023, in exec_module
+  File "<frozen 
+importlib._bootstrap>", 
+line 488, in 
+_call_with_frames_removed
+  File "C:\Users\Lenovo\ma
+jor_project\backend\app\ma
+in.py", line 12, in 
+<module>
+    from app.routes 
+import (
+    ...<7 lines>...
+    )
+  File "C:\Users\Lenovo\ma
+jor_project\backend\app\ro
+utes\__init__.py", line 
+1, in <module>
+    from app.routes.auth 
+import router as 
+auth_router
+  File "C:\Users\Lenovo\ma
+jor_project\backend\app\ro
+utes\auth.py", line 10, 
+in <module>
+    from 
+app.services.auth_service 
+import authenticate_user
+  File "C:\Users\Lenovo\ma
+jor_project\backend\app\se
+rvices\__init__.py", line 
+2, in <module>
+    from app.services.pers
+on_service import (
+        add_person, 
+get_all_persons, 
+get_person_by_id, 
+update_person, 
+delete_person,
+    )
+  File "C:\Users\Lenovo\ma
+jor_project\backend\app\se
+rvices\person_service.py",
+ line 18, in <module>
+    encoder = 
+FaceEncoder()
+  File "C:\Users\Lenovo\ma
+jor_project\backend\app\co
+re\face_encoder.py", line 
+23, in __init__
+    self._load()
+    ~~~~~~~~~~^^
+  File "C:\Users\Lenovo\ma
+jor_project\backend\app\co
+re\face_encoder.py", line 
+30, in _load
+    print(f"\u2705  
+FaceEncoder: 
+DeepFace/{FACENET_MODEL} 
+loaded")
+    ~~~~~^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^
+  File "C:\Users\Lenovo\Ap
+pData\Local\Programs\Pytho
+n\Python313\Lib\encodings\
+cp1252.py", line 19, in 
+encode
+    return codecs.charmap_
+encode(input,self.errors,e
+ncoding_table)[0]
+           ~~~~~~~~~~~~~~~
+~~~~~~^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^
+UnicodeEncodeError: 
+'charmap' codec can't 
+encode character '\u2705' 
+in position 0: character 
+maps to <undefined>

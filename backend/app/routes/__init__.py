@@ -5,6 +5,8 @@ from app.routes.detection import router as detection_router
 from app.routes.upload import router as upload_router
 from app.routes.live import router as live_router
 from app.routes.camera import router as camera_router
+from app.routes.stream import router as stream_router
+from app.routes.rtsp   import router as rtsp_router
 
 __all__ = [
     "auth_router",
@@ -14,4 +16,6 @@ __all__ = [
     "upload_router",
     "live_router",
     "camera_router",
+    "stream_router",
+    "rtsp_router",
 ]

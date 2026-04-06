@@ -17,6 +17,8 @@ class DetectionLog(Base):
     timestamp = Column(DateTime, nullable=False)
     confidence_score = Column(Float, nullable=False)
     image_snapshot_path = Column(String(500), nullable=True)
+    status = Column(String(50), default="pending")
+    video_time_sec = Column(Float, nullable=True)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
     # Relationships

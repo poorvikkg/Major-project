@@ -27,19 +27,19 @@ class FaceEncoder:
             from deepface import DeepFace
             self._deepface = DeepFace
             self._mode = "deepface_facenet"
-            print(f"✅  FaceEncoder: DeepFace/{FACENET_MODEL} loaded")
+            print(f"[+] FaceEncoder: DeepFace/{FACENET_MODEL} loaded")
             return
         except ImportError:
-            print("⚠️   DeepFace unavailable → OpenCV HOG fallback")
+            print("[!] DeepFace unavailable -> OpenCV HOG fallback")
 
         try:
             import cv2
             path = cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
             self._cascade = cv2.CascadeClassifier(path)
             self._mode = "opencv_hog"
-            print("✅  FaceEncoder: OpenCV HOG mode")
+            print("[+] FaceEncoder: OpenCV HOG mode")
         except Exception as e:
-            print(f"⚠️   OpenCV unavailable ({e}) → stub mode")
+            print(f"[!] OpenCV unavailable ({e}) -> stub mode")
             self._mode = "stub"
 
     @property
@@ -63,10 +63,14 @@ class FaceEncoder:
     def encode_frame(self, frame) -> list[float] | None:
         """Encode directly from a numpy BGR frame."""
         import cv2, tempfile, os
-        tmp = tempfile.NamedTemporaryFile(suffix=".jpg", delete=False)
-        cv2.imwrite(tmp.name, frame)
-        result = self.encode(tmp.name)
-        os.unlink(tmp.name)
+        fd, tmp_name = tempfile.mkstemp(suffix=".jpg")
+        os.close(fd)
+        cv2.imwrite(tmp_name, frame)
+        result = self.encode(tmp_name)
+        try:
+            os.unlink(tmp_name)
+        except OSError:
+            pass
         return result
 
     def save_embedding(self, embedding: list[float], path: str | Path):

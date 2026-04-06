@@ -38,5 +38,5 @@ DETECTOR_BACKEND = os.getenv("DETECTOR_BACKEND", "opencv")
 MATCH_THRESHOLD = float(os.getenv("MATCH_THRESHOLD", "0.65"))
 
 # ── Video Processing ─────────────────────────────────────────────────────────
-FRAME_SKIP = int(os.getenv("FRAME_SKIP", "10"))           # process every Nth frame
+FRAME_SKIP = int(os.getenv("FRAME_SKIP", "30"))           # process 1 frame per second
 MAX_VIDEO_SIZE_MB = int(os.getenv("MAX_VIDEO_SIZE_MB", "500"))

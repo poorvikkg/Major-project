@@ -13,7 +13,13 @@ PyJWT
 # ── Image / Video Processing ───────────────────────────────────
 opencv-python-headless
 numpy
+scikit-image          # similarity transform for face alignment
 
-# ── Face Recognition (optional — falls back to OpenCV if absent)
-# deepface
-# tensorflow
+# ── Face Recognition Pipeline ─────────────────────────────────
+deepface              # ArcFace / Facenet embeddings + RetinaFace
+tf-keras              # required by newer deepface builds
+insightface           # RetinaFace detector + ArcFace embedder (preferred)
+onnxruntime           # insightface inference backend (CPU)
+
+# ── Vector Search ──────────────────────────────────────────────
+faiss-cpu             # FAISS IndexFlatIP / IVF  (use faiss-gpu on CUDA)

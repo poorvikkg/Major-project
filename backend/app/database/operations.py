@@ -12,7 +12,7 @@ def init_db():
     """Create all tables defined by Base metadata."""
     import app.models  # noqa: F401 — ensure all models are imported
     Base.metadata.create_all(bind=engine)
-    print("✅  Database tables created")
+    print("[+] Database tables created")
 
 
 def seed_admin():
@@ -29,7 +29,7 @@ def seed_admin():
             )
             db.add(admin)
             db.commit()
-            print("✅  Default admin seeded (admin@mpds.com / admin123)")
+            print("[+] Default admin seeded (admin@mpds.com / admin123)")
         else:
             print("ℹ️   Admin user already exists")
     finally:

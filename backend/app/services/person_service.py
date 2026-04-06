@@ -13,10 +13,11 @@ from fastapi import UploadFile
 from app.models.missing_person import MissingPerson
 from app.models.complainant import Complainant
 from app.config import IMAGES_DIR, EMBEDDINGS_DIR
-from app.core.face_encoder import FaceEncoder
+from app.pipeline.face_detector import RetinaFaceDetector
+from app.pipeline.face_embedder import ArcFaceEmbedder
 
-encoder = FaceEncoder()
-
+pipeline_detector = RetinaFaceDetector()
+pipeline_embedder = ArcFaceEmbedder()
 
 # ── helpers ───────────────────────────────────────────────────────────────────
 
@@ -39,12 +40,20 @@ def _save_images_for_person(person_id: int, images: list[UploadFile]) -> list[st
 
 def _build_embedding(image_paths: list[str], person_id: int, name: str) -> str | None:
     """Generate averaged + normalised face embedding from image paths."""
+    import cv2
     import numpy as np
+    import json
     embeddings = []
     for path in image_paths:
-        emb = encoder.encode(path)
-        if emb:
-            embeddings.append(emb)
+        img = cv2.imread(path)
+        if img is None:
+            continue
+        rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        dets = pipeline_detector.detect_and_align(rgb)
+        if dets and dets[0].aligned_face is not None:
+            emb = pipeline_embedder.embed(dets[0].aligned_face)
+            if emb is not None:
+                embeddings.append(emb)
     if not embeddings:
         return None
     arrs = np.array(embeddings)
@@ -53,7 +62,8 @@ def _build_embedding(image_paths: list[str], person_id: int, name: str) -> str |
     if norm > 0:
         avg = avg / norm
     emb_file = EMBEDDINGS_DIR / f"emb_{person_id}_{name.replace(' ', '_')}.json"
-    encoder.save_embedding(avg.tolist(), str(emb_file))
+    with open(str(emb_file), "w") as f:
+        json.dump(avg.tolist(), f)
     return str(emb_file)
 
 

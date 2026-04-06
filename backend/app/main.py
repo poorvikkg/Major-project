@@ -17,6 +17,8 @@ from app.routes import (
     upload_router,
     live_router,
     camera_router,
+    stream_router,
+    rtsp_router,
 )
 
 
@@ -24,9 +26,25 @@ from app.routes import (
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Run on startup: create DB tables and seed admin user."""
+    """Run on startup: create DB tables, seed admin, pre-load FAISS index."""
     init_db()
     seed_admin()
+    # Pre-load FAISS index from DB (non-blocking — runs once)
+    try:
+        from app.database.operations import SessionLocal
+        from app.pipeline import FaissIndex
+        from app.pipeline.initializer import load_embeddings_into_faiss
+        from app.routes.stream import _faiss_index
+        db = SessionLocal()
+        try:
+            n = load_embeddings_into_faiss(db, _faiss_index)
+            import logging
+            logging.getLogger(__name__).info(f"[Startup] FAISS preloaded: {n} embeddings")
+        finally:
+            db.close()
+    except Exception as exc:
+        import logging
+        logging.getLogger(__name__).warning(f"[Startup] FAISS preload skipped: {exc}")
     yield
 
 
@@ -62,6 +80,8 @@ app.include_router(detection_router)
 app.include_router(upload_router)
 app.include_router(live_router)
 app.include_router(camera_router)
+app.include_router(stream_router)   # real-time pipeline
+app.include_router(rtsp_router)     # RTSP stream with bbox overlay
 
 
 # ── Root health check ────────────────────────────────────────────────────────
