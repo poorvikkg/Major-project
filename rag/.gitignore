@@ -1,0 +1,21 @@
+# Node
+node_modules/
+dist/
+.vite/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.env
+
+# Project specific
+chroma_db/
+archive (4)/
+temp_*
+
+# OS
+.DS_Store
+Thumbs.db

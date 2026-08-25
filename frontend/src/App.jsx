@@ -9,24 +9,31 @@ import PersonDetailPage from './pages/PersonDetailPage';
 import UploadVideoPage from './pages/UploadVideoPage';
 import ResultsPage from './pages/ResultsPage';
 import LiveMonitoringPage from './pages/LiveMonitoringPage';
+import RagChatPage from './pages/RagChatPage';
+import RagFloatingButton from './components/rag/RagFloatingButton';
 
 export default function App() {
   const { user } = useAuth();
 
   return (
-    <Routes>
-      <Route
-        path="/login"
-        element={user ? <Navigate to="/dashboard" replace /> : <LoginPage />}
-      />
-      <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
-      <Route path="/add-person" element={<ProtectedRoute><AddPersonPage /></ProtectedRoute>} />
-      <Route path="/missing-persons" element={<ProtectedRoute><MissingPersonsPage /></ProtectedRoute>} />
-      <Route path="/person/:id" element={<ProtectedRoute><PersonDetailPage /></ProtectedRoute>} />
-      <Route path="/upload-video" element={<ProtectedRoute><UploadVideoPage /></ProtectedRoute>} />
-      <Route path="/results" element={<ProtectedRoute><ResultsPage /></ProtectedRoute>} />
-      <Route path="/live-monitoring" element={<ProtectedRoute><LiveMonitoringPage /></ProtectedRoute>} />
-      <Route path="*" element={<Navigate to={user ? '/dashboard' : '/login'} replace />} />
-    </Routes>
+    <>
+      <Routes>
+        <Route
+          path="/login"
+          element={user ? <Navigate to="/dashboard" replace /> : <LoginPage />}
+        />
+        <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+        <Route path="/add-person" element={<ProtectedRoute><AddPersonPage /></ProtectedRoute>} />
+        <Route path="/missing-persons" element={<ProtectedRoute><MissingPersonsPage /></ProtectedRoute>} />
+        <Route path="/person/:id" element={<ProtectedRoute><PersonDetailPage /></ProtectedRoute>} />
+        <Route path="/upload-video" element={<ProtectedRoute><UploadVideoPage /></ProtectedRoute>} />
+        <Route path="/results" element={<ProtectedRoute><ResultsPage /></ProtectedRoute>} />
+        <Route path="/live-monitoring" element={<ProtectedRoute><LiveMonitoringPage /></ProtectedRoute>} />
+        <Route path="/rag-chat" element={<ProtectedRoute><RagChatPage /></ProtectedRoute>} />
+        <Route path="*" element={<Navigate to={user ? '/dashboard' : '/login'} replace />} />
+      </Routes>
+      {/* Floating RAG button — visible on all authenticated pages */}
+      {user && <RagFloatingButton />}
+    </>
   );
 }

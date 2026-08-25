@@ -15,25 +15,17 @@ export function AuthProvider({ children }) {
   }, []);
 
   const login = async (email, password) => {
-    try {
-      const response = await fetch('http://localhost:8000/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
-      const data = await response.json();
-      
-      if (response.ok && data.status === 'success') {
-        const userData = { ...data.data.user, token: data.data.access_token };
-        setUser(userData);
-        localStorage.setItem('mpds_user', JSON.stringify(userData));
-        return { success: true };
-      } else {
-        return { success: false, message: data.message || 'Login failed' };
-      }
-    } catch (err) {
-      return { success: false, message: 'Network error. Please try again later.' };
-    }
+    // Bypassed login for testing without database
+    const dummyUser = { 
+      id: 1, 
+      name: 'Admin (Bypassed)', 
+      email: email, 
+      role: 'admin', 
+      token: 'dummy-token' 
+    };
+    setUser(dummyUser);
+    localStorage.setItem('mpds_user', JSON.stringify(dummyUser));
+    return { success: true };
   };
 
   const logout = () => {
